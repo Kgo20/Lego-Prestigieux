@@ -76,4 +76,13 @@ body {
     margin-bottom: 20px;
     margin-right: 10px;
     margin-left: 10px;
+
+}
+
+.center {
+    text-align: center;
+}
+
+.text-yellow {
+    color: yellow;
 }
