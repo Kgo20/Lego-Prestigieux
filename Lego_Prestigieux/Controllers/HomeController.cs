@@ -23,6 +23,16 @@ namespace Lego_Prestigieux.Controllers
             return View();
         }
 
+        public IActionResult Contact()
+        {
+            return View("Contact");
+        }
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+
+
         public IActionResult Privacy()
         {
             return View();
