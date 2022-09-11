@@ -29,7 +29,7 @@ namespace Lego_Prestigieux.Controllers
         }
         public IActionResult AboutUs()
         {
-            return View("AboutUs");
+            return View();
         }
 
 
