@@ -99,3 +99,8 @@ body {
 .m3 {
     height: 200px;
 }
+
+.butonretour {
+    min-width: 50px;
+    width: 50px;
+}

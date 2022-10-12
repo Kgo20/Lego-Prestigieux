@@ -5,7 +5,7 @@ namespace Lego_Prestigieux.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<Produit> Produits { get; set; }
+        public DbSet<ProductModel> Produits { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
