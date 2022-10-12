@@ -3,6 +3,7 @@ using Lego_Prestigieux.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,18 @@ namespace Lego_Prestigieux
 
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentityCore<ApplicationUser>()
+             .AddRoles<IdentityRole>()
+             .AddEntityFrameworkStores<ApplicationDbContext>()
+             .AddSignInManager()
+             .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            }).AddIdentityCookies();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
