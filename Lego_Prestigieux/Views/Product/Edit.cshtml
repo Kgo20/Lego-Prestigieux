@@ -1,15 +1,16 @@
 ﻿@model Lego_Prestigieux.Models.ProductModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
 <div class="container-fluid">
     <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Ajouter un nouveau produit</span></h2>
     <div class="contact-form bg-light p-30">
         <div id="success"></div>
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Nom</label>
                 <input asp-for="Name" class="form-control" />
@@ -51,13 +52,15 @@
                 <span asp-validation-for="URL" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                 <a class="btn btn-primary" asp-action="Index" asp-controller="Home">Retour</a>
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="btn btn-primary" asp-action="Index" asp-controller="Home">Retour</a>
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }

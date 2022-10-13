@@ -25,7 +25,7 @@ namespace Lego_Prestigieux.Models
         public string Name { get; set; }
         public string Detail { get; set; }
         public float Price { get; set; }
-        public float? Reduction { get; set; }
+        public float? Reduction { get; set; } = 0;
         public int Quantity { get; set; }
         public Status Status { get; set; }
         public Category Category { get; set; }

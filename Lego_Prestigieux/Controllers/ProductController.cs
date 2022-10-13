@@ -2,7 +2,9 @@
 using Lego_Prestigieux.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lego_Prestigieux.Controllers
@@ -22,9 +24,28 @@ namespace Lego_Prestigieux.Controllers
         }
 
         // GET: ProductController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            return View();
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var productModel = await _context.Produits //.Select(v => v.Vehicles.W)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (productModel == null)
+                {
+                    return NotFound();
+                }
+
+                return View("Detail", productModel);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "ERROR: Could not load this branch...");
+            }
         }
 
         // GET: ProductController/Create
@@ -56,6 +77,8 @@ namespace Lego_Prestigieux.Controllers
                     Quantity = Model.Quantity,
                     URL = Model.URL
                 };
+                if (product.Reduction is null)
+                    product.Reduction = 0;
 
 
 
@@ -74,44 +97,114 @@ namespace Lego_Prestigieux.Controllers
         }
 
         // GET: ProductController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View();
+            // Envoie au formulaire
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var productModel = await _context.Produits.FindAsync(id);
+                if (productModel == null)
+                {
+                    return NotFound();
+                }
+                return View("Edit", productModel);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "ERROR: Could not load this branch...");
+            }
         }
 
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, ProductModel productModel)
         {
+            // sauvegarde les changements
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (id != productModel.Id)
+                {
+                    return NotFound();
+                }
+
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(productModel);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!ProductModelExists(productModel.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction("Index", "Home");
+                }
+                return View("Edit", productModel);
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                return StatusCode(500, "ERROR: Could not edit this branch...");
             }
+        }
+        private bool ProductModelExists(int id)
+        {
+            return _context.Produits.Any(e => e.Id == id);
         }
 
         // GET: ProductController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return View();
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var productModel = await _context.Produits
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (productModel == null)
+                {
+                    return NotFound();
+                }
+
+                return View("Delete", productModel);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "ERROR: Could not find this branch...");
+            }
         }
 
         // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var productModel = await _context.Produits.FindAsync(id);
+                _context.Produits.Remove(productModel);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Home");
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                return StatusCode(500, "ERROR: Could not delete this branch...");
             }
         }
     }
