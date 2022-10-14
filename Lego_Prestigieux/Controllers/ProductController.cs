@@ -104,6 +104,11 @@ namespace Lego_Prestigieux.Controllers
             return View("List", new FilterModel { SearchName = search });
         }
 
+        public async Task<IActionResult> FilterCategory(Category? category)
+        {
+            return View("List", new FilterModel { Category = category });
+        }
+
         [HttpPost]
         public async Task<IActionResult> Filter(int descending = 0,
                                                 float maxPrice = float.MaxValue,
