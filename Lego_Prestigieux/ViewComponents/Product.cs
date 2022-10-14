@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Lego_Prestigieux.ViewComponents
 {
@@ -22,28 +23,37 @@ namespace Lego_Prestigieux.ViewComponents
            float minPrice = 0,
            Status? status = null,
            Category? category = null,
+           string searchName = "",
            float minReduction = 0)
         {
-            var products = await _context.Produits.ToListAsync();
+            IEnumerable<ProductModel> products = new List<ProductModel>();
+
+            if (searchName != null && searchName != "")
+                products = await _context.Produits
+                    .Where(p => p.Name.Contains(searchName))
+                    .ToListAsync();
+            else
+                products = await _context.Produits.ToListAsync();
+
             if (descending)
             {
-                products = await _context.Produits
+                products = products
                     .Where(product => (maxPrice >= product.Price) &&
                                       (minPrice <= product.Price) &&
                                       (status == null || status == product.Status) &&
                                       (category == null || category == product.Category) &&
                                       (minReduction <= product.Reduction))
-                    .OrderByDescending(p => p.Price).Take(nbResult).ToListAsync();
+                    .OrderByDescending(p => p.Price).Take(nbResult);
             }
             else
             {
-                products = await _context.Produits
+                products = products
                     .Where(product => (maxPrice >= product.Price) &&
                                       (minPrice <= product.Price) &&
                                       (status == null || status == product.Status) &&
                                       (category == null || category == product.Category) &&
                                       (minReduction <= product.Reduction))
-                    .OrderBy(p => p.Price).Take(nbResult).ToListAsync();
+                    .OrderBy(p => p.Price).Take(nbResult);
             }
 
 

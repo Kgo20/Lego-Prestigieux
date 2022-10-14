@@ -4,19 +4,19 @@ namespace Lego_Prestigieux.Models
 {
     public enum Category
     {
-        Prestigieux,
-        Nouveautés,
-        MeilleursVendeurs,
-        Collections,
-        Adultes,
-        Enfants,
-        StarWars,
+        Prestigieux = 0,
+        Nouveautés = 1,
+        MeilleursVendeurs = 2,
+        Collections = 3,
+        Adultes = 4,
+        Enfants = 5,
+        StarWars = 6
     }
 
     public enum Status
     {
-        Disponible,
-        Indisponible
+        Disponible = 0,
+        Indisponible = 1
     }
     public class ProductModel
     {

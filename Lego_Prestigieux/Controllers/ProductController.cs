@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -94,6 +96,38 @@ namespace Lego_Prestigieux.Controllers
             {
                 return StatusCode(500, "ERROR: Could not create the product, try again");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SearchProduct(string search)
+        {
+            return View("List", new FilterModel { SearchName = search });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Filter(int descending = 0,
+                                                float maxPrice = float.MaxValue,
+                                                float minPrice = 0,
+                                                Status? status = null,
+                                                Category? category = null,
+                                                string searchName = "",
+                                                float minReduction = 0)
+        {
+            FilterModel model = new FilterModel();
+
+            model.MinReduction = minReduction;
+            model.MinPrice = minPrice;
+            model.MaxPrice = maxPrice;
+
+            model.Status = status;
+            model.Category = category;
+
+            if (descending == 1)
+                model.Descending = false;
+
+            model.SearchName = searchName;
+
+            return View("List", model);
         }
 
         // GET: ProductController/Edit/5

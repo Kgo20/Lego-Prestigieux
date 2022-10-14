@@ -1,0 +1,14 @@
+﻿@model Lego_Prestigieux.Models.NavBarModel
+
+<body>
+    <form asp-controller="Product" asp-action="SearchProduct" method="post" role="form">
+        <div class="input-group">
+            <input asp-for="Search" type="text" class="form-control" placeholder="Recherche">
+            <div class="input-group-append">
+                <button class="input-group-text bg-transparent text-primary" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</body>
