@@ -37,7 +37,6 @@ namespace Lego_Prestigieux.Data
 
             };
 
-
             builder.SeedUsers(admins);
             builder.SeedUsersToRole(admins, new IdentityRole("Admin"));
         }
