@@ -11,6 +11,8 @@ namespace Lego_Prestigieux.Models
     }
     public class FilterModel
     {
+        public int Page { get; set; } = 1;
+        public int PageMax { get; set; } = 0;
         public bool Descending { get; set; } = true;
         public int NbResult { get; set; } = int.MaxValue;
         public float MaxPrice { get; set; } = float.MaxValue;

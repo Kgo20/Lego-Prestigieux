@@ -2,6 +2,7 @@
 using Lego_Prestigieux.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
@@ -101,12 +102,40 @@ namespace Lego_Prestigieux.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchProduct(string search)
         {
-            return View("List", new FilterModel { SearchName = search });
+            return RedirectToAction("List", new FilterModel { SearchName = search });
         }
 
         public async Task<IActionResult> FilterCategory(Category? category)
         {
-            return View("List", new FilterModel { Category = category });
+            return RedirectToAction("List", new FilterModel { Category = category });
+        }
+
+        public async Task<IActionResult> List(FilterModel model)
+        {
+            //0 veut dire que le nombre de pages maximum n'a pas été calculé
+            if (model.PageMax == 0)
+            {
+                List<ProductModel> products = new List<ProductModel>();
+
+                if (model.SearchName != null && model.SearchName != "")
+                    products = await _context.Produits
+                        .Where(p => p.Name.Contains(model.SearchName))
+                        .ToListAsync();
+                else
+                    products = await _context.Produits.ToListAsync();
+
+                    products = products
+                        .Where(product => (model.MaxPrice >= product.Price) &&
+                                          (model.MinPrice <= product.Price) &&
+                                          (model.Status == null || model.Status == product.Status) &&
+                                          (model.Category == null || model.Category == product.Category) &&
+                        (model.MinReduction <= product.Reduction))
+                        .Take(model.NbResult).ToList();
+
+                model.PageMax = (int)Math.Ceiling((decimal)products.Count / 12);
+            }
+
+            return View("List", model);
         }
 
         [HttpPost]
@@ -132,7 +161,57 @@ namespace Lego_Prestigieux.Controllers
 
             model.SearchName = searchName;
 
-            return View("List", model);
+            return RedirectToAction("List", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NextPage(int descending = 0,
+                                                int page = 1,
+                                                int pageMax = 0,
+                                                float maxPrice = float.MaxValue,
+                                                float minPrice = 0,
+                                                Status? status = null,
+                                                Category? category = null,
+                                                string searchName = "",
+                                                float minReduction = 0)
+        {
+            FilterModel model = new FilterModel();
+            model.MinReduction= minReduction;
+            model.MinPrice = minPrice;
+            model.MaxPrice = maxPrice;
+            model.PageMax = pageMax;
+            model.Page = page + 1;
+            model.Status = status;
+            model.Category = category;
+            model.SearchName = searchName;
+            model.Descending = descending == 0 ? true : false;
+            
+            return RedirectToAction("List", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LastPage(int descending = 0,
+                                                int page = 1,
+                                                int pageMax = 0,
+                                                float maxPrice = float.MaxValue,
+                                                float minPrice = 0,
+                                                Status? status = null,
+                                                Category? category = null,
+                                                string searchName = "",
+                                                float minReduction = 0)
+        {
+            FilterModel model = new FilterModel();
+            model.MinReduction = minReduction;
+            model.MinPrice = minPrice;
+            model.MaxPrice = maxPrice;
+            model.PageMax = pageMax;
+            model.Page = page - 1;
+            model.Status = status;
+            model.Category = category;
+            model.SearchName = searchName;
+            model.Descending = descending == 0 ? true : false;
+
+            return RedirectToAction("List", model);
         }
 
         // GET: ProductController/Edit/5
