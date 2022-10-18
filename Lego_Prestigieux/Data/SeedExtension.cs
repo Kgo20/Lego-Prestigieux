@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Lego_Prestigieux.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -7,11 +8,35 @@ namespace Lego_Prestigieux.Data
     public static class SeedExtension
     {
         private static readonly PasswordHasher<ApplicationUser> PASSWORD_HASHER = new();
+
+        private static ProductModel ProductSeed(string name, string detail, int price, int reduction, int quantity, Status status, Category category, string url)
+        {
+            var product = new ProductModel
+            {
+                Name = name,
+                Detail = detail,
+                Price = price,
+                Reduction = reduction,
+                Quantity = quantity,
+                Status = status,
+                Category = category,
+                URL = url
+            };
+
+            return product;
+        }
+
         public static void Seed(this ModelBuilder builder)
         {
             var admins = new List<ApplicationUser>() {
                 CreateUser("Francois", "Qwerty123!")
             };
+
+            var products = new List<ProductModel>()
+            {
+
+            };
+
 
             builder.SeedUsers(admins);
             builder.SeedUsersToRole(admins, new IdentityRole("Admin"));
