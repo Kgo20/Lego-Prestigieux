@@ -128,7 +128,7 @@ namespace Lego_Prestigieux.Data
                 new ProductModel()
                 {
                     Id= 7,
-                    Name= "Luke Skywalker’s Landspeeder™",
+                    Name= "Luke Skywalker’s",
                     Category= Category.StarWars,
                     Detail= "Be transported to the desert planet of Tatooine as you build the first-ever LEGO® Star Wars™" +
                     " Ultimate Collector Series version of Luke Skywalker’s Landspeeder (75341). Use new building techniques" +
@@ -267,7 +267,7 @@ namespace Lego_Prestigieux.Data
                 new ProductModel()
                 {
                     Id= 16,
-                    Name= "The Bad Batch™ Attack Shuttle",
+                    Name= "The Bad Batch™",
                     Category= Category.StarWars,
                     Detail= "Kids will love role-playing Clone Force 99 missions with this LEGO® brick-built version of The Bad Batch Attack Shuttle (75314)" +
                     " from Star Wars: The Bad Batch. It features large wings that move up and down for landing and flight modes, 2 spring-loaded shooters and" +
@@ -282,7 +282,7 @@ namespace Lego_Prestigieux.Data
                 new ProductModel()
                 {
                     Id= 17,
-                    Name= "Inquisitor Transport Scythe™",
+                    Name= "Inquisitor Transport",
                     Category= Category.StarWars,
                     Detail= "Kids can play out Jedi-hunting missions from Star Wars: Obi-Wan Kenobi with LEGO® Star Wars™ Inquisitor Transport Scythe (75336)." +
                     " This buildable toy starship has adjustable wings for flight and landing modes, 2 spring-loaded shooters and an access ramp. The cockpit" +
@@ -327,7 +327,7 @@ namespace Lego_Prestigieux.Data
                 new ProductModel()
                 {
                     Id= 20,
-                    Name= "Hogwarts Express™ – Collectors' Edition",
+                    Name= "Hogwarts Express™",
                     Category= Category.Collections,
                     Detail= "Capture the magic of the Harry Potter™ stories with a buildable, 1:32 scale replica of the most iconic vehicle in the Wizarding World." +
                     " LEGO® Harry Potter Hogwarts Express™ – Collectors' Edition (76405) is a spectacular build-and-display project for adult Harry Potter enthusiasts," +
@@ -341,7 +341,7 @@ namespace Lego_Prestigieux.Data
                 new ProductModel()
                 {
                     Id= 21,
-                    Name= "App-Controlled Cat® D11 Bulldozer",
+                    Name= "App-Controlled Cat",
                     Category= Category.Nouveautés,
                     Detail= "Celebrate a hero of the construction world as you build a replica version of the biggest Cat® dozer with this LEGO® Technic™ App-Controlled Cat®" +
                     " D11 Bulldozer (42131) kit. This large set lets adults enjoy quality ‘me time’ focusing on their passion. Just like the real Cat® bulldozer, this model" +
@@ -384,7 +384,7 @@ namespace Lego_Prestigieux.Data
                 new ProductModel()
                 {
                     Id= 24,
-                    Name= "Lion Knights' Castle",
+                    Name= "Lion Knights",
                     Category= Category.Enfants,
                     Detail= "A long time ago there was a child who loved to build with LEGO® bricks. Now that child is grown up and there’s a new quest to enjoy." +
                     " Celebrating 90 years of LEGO history, the Lion Knights’ Castle (10305) building set is a new interpretation inspired by the original LEGO Castle" +
@@ -411,7 +411,7 @@ namespace Lego_Prestigieux.Data
                 new ProductModel()
                 {
                     Id= 26,
-                    Name= "Real Madrid – Santiago Bernabéu Stadium",
+                    Name= "Real Madrid",
                     Category= Category.Collections,
                     Detail= "A build to capture the heart of any Real Madrid fan. This LEGO® Real Madrid – Santiago Bernabéu Stadium (10299) building" +
                     " kit for adults lets you build an accurate scale model version of one of the most celebrated soccer stadiums of all time. So kick" +
@@ -458,7 +458,7 @@ namespace Lego_Prestigieux.Data
                 new ProductModel()
                 {
                     Id= 29,
-                    Name= "McLaren Formula 1™ Race Car",
+                    Name= "McLaren Formula 1",
                     Category= Category.Nouveautés,
                     Detail= "Remove all distractions. Channel your competitor's focus. It’s time to build a highly detailed LEGO® Technic™ McLaren Formula 1™ Race Car 42141 model." +
                     " When you cross the finish line, you’ll feel immense pride – with an impressive display model to celebrate your dedication.",
