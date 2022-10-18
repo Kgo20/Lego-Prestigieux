@@ -59,7 +59,7 @@
             <div class="col-lg-4 col-12 text-left">
                 <vc:nav-bar></vc:nav-bar>
             </div>
-            <div class="col-lg-4 col-12  text-right">
+            <div class="col-lg-4 col-12  text-right" style="padding-right: 20px">
                 <p class="m-0">Service client</p>
                 <h5>450-999-9999</h5>
                 @if (!User.Identity.IsAuthenticated)
@@ -152,8 +152,8 @@
                         <div class="row">
                             <div class="col-md-6 mb-5">
                                 <div class="d-flex flex-column justify-content-start ">
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Accueil</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Magasiner</a>
+                                    <a class="text-secondary mb-2" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-angle-right mr-2"></i>Accueil</a>
+                                    <a class="text-secondary mb-2" asp-controller="Product" asp-action="FilterCategory" asp-route-category=""><i class="fa fa-angle-right mr-2"></i>Magasiner</a>
                                     <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Panier</a>
                                 </div>
                             </div>

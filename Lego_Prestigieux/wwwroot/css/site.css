@@ -104,3 +104,8 @@ body {
     min-width: 50px;
     width: 50px;
 }
+
+.detail200 {
+    width: 200px;
+    height: 200px;
+}
