@@ -457,6 +457,19 @@ namespace Lego_Prestigieux.Data
                 },
                 new ProductModel()
                 {
+                    Id= 29,
+                    Name= "McLaren Formula 1™ Race Car",
+                    Category= Category.Nouveautés,
+                    Detail= "Remove all distractions. Channel your competitor's focus. It’s time to build a highly detailed LEGO® Technic™ McLaren Formula 1™ Race Car 42141 model." +
+                    " When you cross the finish line, you’ll feel immense pride – with an impressive display model to celebrate your dedication.",
+                    Quantity= 1,
+                    Price= 249.99f,
+                    Reduction= 1,
+                    Status = Status.Disponible,
+                    URL = "https://www.lego.com/cdn/cs/set/assets/blte6366e8b88d64801/42141.png?fit=bounds&format=webply&quality=80&width=170&height=170&dpr=1"
+                },
+                new ProductModel()
+                {
                     Id= 30,
                     Name= "Sanctum Sanctorum",
                     Category= Category.MeilleursVendeurs,
