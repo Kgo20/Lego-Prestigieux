@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Lego_Prestigieux.Models
 {
@@ -30,5 +31,25 @@ namespace Lego_Prestigieux.Models
         public Status Status { get; set; }
         public Category Category { get; set; }
         public string URL { get; set; }
+
+        public class ProductValidator : AbstractValidator<ProductModel>
+        {
+            public ProductValidator()
+            {
+                RuleFor(e => e.Name)
+               .Matches(@"^[A-Za-z0-9-]{3,30}$").WithMessage("Name don't has a good format")
+               .NotEmpty().WithMessage("This field is required");
+
+                RuleFor(e => e.Price)
+                .LessThan(int.MaxValue).WithMessage("The price need to be under " + int.MaxValue.ToString())
+                .NotEmpty().WithMessage("This field is required");
+
+                RuleFor(e => e.Quantity)
+                .LessThan(int.MaxValue).WithMessage("The quantity need to be under " + int.MaxValue.ToString())
+                .NotEmpty().WithMessage("This field is required");
+
+                RuleFor(e => e.Reduction).LessThan(100).WithMessage("The minimum reduction must be less than or equal to 100");
+            }
+        }
     }
 }
