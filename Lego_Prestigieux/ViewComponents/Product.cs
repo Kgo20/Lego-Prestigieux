@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
+using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Lego_Prestigieux.ViewComponents
 {
@@ -17,6 +19,7 @@ namespace Lego_Prestigieux.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
+           int page = 1,
            bool descending = true,
            int nbResult = int.MaxValue,
            float maxPrice = float.MaxValue,
@@ -26,7 +29,7 @@ namespace Lego_Prestigieux.ViewComponents
            string searchName = "",
            float minReduction = 0)
         {
-            IEnumerable<ProductModel> products = new List<ProductModel>();
+            List<ProductModel> products = new List<ProductModel>();
 
             if (searchName != null && searchName != "")
                 products = await _context.Produits
@@ -43,7 +46,7 @@ namespace Lego_Prestigieux.ViewComponents
                                       (status == null || status == product.Status) &&
                                       (category == null || category == product.Category) &&
                                       (minReduction <= product.Reduction))
-                    .OrderByDescending(p => p.Price).Take(nbResult);
+                    .OrderByDescending(p => p.Price).Take(nbResult).Take(page * 12).ToList();
             }
             else
             {
@@ -53,9 +56,11 @@ namespace Lego_Prestigieux.ViewComponents
                                       (status == null || status == product.Status) &&
                                       (category == null || category == product.Category) &&
                                       (minReduction <= product.Reduction))
-                    .OrderBy(p => p.Price).Take(nbResult);
+                    .OrderBy(p => p.Price).Take(nbResult).Take(page * 12).ToList();
             }
 
+            while (products.Count > 12)
+                products.RemoveAt(0);
 
             return View("Products", products);
         }
