@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" asp-route-id="@product.Id" asp-controller="Product" asp-action="Details">@product.Name</a>
+                        <a class="h6 text-decoration-none text-truncate" style="display: block" asp-route-id="@product.Id" asp-controller="Product" asp-action="Details">@product.Name</a>
                         @if (product.Status == Status.Disponible)
                         {
                             <p>Disponible</p>

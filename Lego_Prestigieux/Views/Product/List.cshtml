@@ -6,7 +6,7 @@
 
     <div class="row center col-md-12" style="margin-bottom: 10px">
         <form asp-controller="Product" asp-action="Filter" asp-route-searchName="@Model.SearchName">
-            <div class="container-fluid" style="display:flex;margin-left:2px">
+            <div class="container-fluid d-flex flex-column flex-sm-row" style="margin-left:2px">
 
                 <div class="form-group" style="margin-left:2px; min-width:50px">
                     <label asp-for="Descending" class="control-label">Prix <br /> Produit:</label>
