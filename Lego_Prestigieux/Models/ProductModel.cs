@@ -37,7 +37,7 @@ namespace Lego_Prestigieux.Models
             public ProductValidator()
             {
                 RuleFor(e => e.Name)
-               .Matches(@"^[A-Za-z0-9-]{3,30}$").WithMessage("Name don't has a good format")
+               .Matches(@"^[A-Za-z0-9- ]{3,30}$").WithMessage("Name don't has a good format")
                .NotEmpty().WithMessage("This field is required");
 
                 RuleFor(e => e.Price)
