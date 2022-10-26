@@ -30,8 +30,34 @@ namespace Lego_Prestigieux.Data
         public static void Seed(this ModelBuilder builder)
         {
             var admins = new List<ApplicationUser>() {
-                CreateUser("Francois", "Qwerty123!")
+                CreateUser("Francois@gmail.com", "Qwerty123!")
             };
+
+            var customer = new List<CreateCustomerWithAddress>()
+            {
+                new CreateCustomerWithAddress()
+                {
+                    FirstName = "Jean",
+                    LastName = "Bob",
+                    PhoneNumber = "450-111-4444",
+                    Address = "23 Rue Jâque",
+                    Province = "Québec",
+                    Country = "Canada",
+                    PostalCode = "J0H 1R0"
+                },
+
+            new CreateCustomerWithAddress()
+            {
+                FirstName = "Marc",
+                LastName = "Bob",
+                PhoneNumber = "450-111-5555",
+                Address = "23 Rue Marc",
+                Province = "Québec",
+                Country = "Canada",
+                PostalCode = "J0H 1R0"
+            }
+        };
+            builder.SeedCustomer(customer);
 
             var products = new List<ProductModel>()
             {
@@ -484,9 +510,52 @@ namespace Lego_Prestigieux.Data
             };
 
             builder.SeedUsers(admins);
+
             builder.SeedUsersToRole(admins, new IdentityRole("Admin"));
 
             builder.SeedProducts(products);
+        }
+
+        private static void SeedCustomer(this ModelBuilder builder, List<CreateCustomerWithAddress> customers)
+        {
+            int i = 0;
+            foreach (var c in customers)
+            {
+                i++;
+                //var address = new List<AddressModel>()
+                //{
+                //    new AddressModel()
+                //    {
+                //        Id = i,
+                //        CustomerId = i,
+                //        Address = c.Address,
+                //        Province = c.Province,
+                //        Country = c.Country,
+                //        PostalCode = c.PostalCode
+                //    }
+                //};
+
+                var customer = new CustomerModel
+                {
+                    Id= i,
+                    FirstName = c.FirstName,
+                    LastName = c.LastName,
+                    PhoneNumber = c.PhoneNumber,
+                };
+
+                builder.Entity<CustomerModel>().HasData(customer);
+                builder.Entity<AddressModel>().HasData(
+                    new
+                    {
+                        Id = i,
+                        CustomerId = i,
+                        Address = c.Address,
+                        Province = c.Province,
+                        Country = c.Country,
+                        PostalCode = c.PostalCode,
+                    });
+
+            }
         }
 
         private static void SeedProducts(this ModelBuilder builder, IEnumerable<ProductModel> products)
