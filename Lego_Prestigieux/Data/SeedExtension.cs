@@ -10,55 +10,69 @@ namespace Lego_Prestigieux.Data
     {
         private static readonly PasswordHasher<ApplicationUser> PASSWORD_HASHER = new();
 
-        private static ProductModel ProductSeed(string name, string detail, float price, int reduction, int quantity, Status status, Category category, string url)
-        {
-            var product = new ProductModel
-            {
-                Name = name,
-                Detail = detail,
-                Price = price,
-                Reduction = reduction,
-                Quantity = quantity,
-                Status = status,
-                Category = category,
-                URL = url
-            };
-
-            return product;
-        }
-
         public static void Seed(this ModelBuilder builder)
         {
+            #region SeedUser
             var admins = new List<ApplicationUser>() {
-                CreateUser("Francois@gmail.com", "Qwerty123!")
+                CreateUser(1.ToString(), "Francois@gmail.com", "Qwerty123!", "François", "François", "450-888-4444")
             };
 
-            var customer = new List<CreateCustomerWithAddress>()
-            {
-                new CreateCustomerWithAddress()
-                {
-                    FirstName = "Jean",
-                    LastName = "Bob",
-                    PhoneNumber = "450-111-4444",
-                    Address = "23 Rue Jâque",
-                    Province = "Québec",
-                    Country = "Canada",
-                    PostalCode = "J0H 1R0"
-                },
+            builder.SeedUsers(admins);
+            builder.SeedUsersToRole(admins, new IdentityRole("Admin"));
 
-            new CreateCustomerWithAddress()
+            var customer = new List<ApplicationUser>() {
+                CreateUser(2.ToString(), "Jean@gmail.com", "Qwerty123!", "Jean", "Jean", "450-111-4444"),
+                CreateUser(3.ToString(), "Bob@gmail.com", "Qwerty123!", "Bob", "Bob", "450-213-4568")
+            };
+
+            builder.SeedUsers(customer);
+            builder.SeedUsersToRole(customer, new IdentityRole("Customer"));
+            #endregion
+
+            #region SeedAddresses
+            List<AddressModel> addresses = new List<AddressModel>();
+            addresses.Add(new AddressModel
             {
-                FirstName = "Marc",
-                LastName = "Bob",
-                PhoneNumber = "450-111-5555",
-                Address = "23 Rue Marc",
+                Id = 1,
+                CustomerId = 1.ToString(),
+                Address = "12 rue jaque",
                 Province = "Québec",
                 Country = "Canada",
                 PostalCode = "J0H 1R0"
-            }
-        };
-            builder.SeedCustomer(customer);
+            });
+            addresses.Add(new AddressModel
+            {
+                Id = 2,
+                CustomerId = 2.ToString(),
+                Address = "23 rue jaquet",
+                Province = "Québec",
+                Country = "Canada",
+                PostalCode = "J0H 1R0"
+            });
+            addresses.Add(new AddressModel
+            {
+                Id = 3,
+                CustomerId = 2.ToString(),
+                Address = "2300 rue pablo",
+                Province = "Ontario",
+                Country = "Brésil",
+                PostalCode = "J0H 1R0"
+            });
+            addresses.Add(new AddressModel
+            {
+                Id = 4,
+                CustomerId = 3.ToString(),
+                Address = "67 rue roberto",
+                Province = "Amoé",
+                Country = "Pasàtoé",
+                PostalCode = "J0H 1R0"
+            });
 
+            builder.SeedAddress(addresses);
+
+            #endregion
+
+            #region SeedProduct
             var products = new List<ProductModel>()
             {
                 new ProductModel()
@@ -508,78 +522,26 @@ namespace Lego_Prestigieux.Data
                     URL = "https://www.lego.com/cdn/cs/set/assets/blt5157080434f0c032/76218.png?fit=bounds&format=webply&quality=80&width=170&height=170&dpr=1"
                 }
             };
-
-            builder.SeedUsers(admins);
-
-            builder.SeedUsersToRole(admins, new IdentityRole("Admin"));
-
             builder.SeedProducts(products);
+            #endregion
         }
-
-        private static void SeedCustomer(this ModelBuilder builder, List<CreateCustomerWithAddress> customers)
-        {
-            int i = 0;
-            foreach (var c in customers)
-            {
-                i++;
-                //var address = new List<AddressModel>()
-                //{
-                //    new AddressModel()
-                //    {
-                //        Id = i,
-                //        CustomerId = i,
-                //        Address = c.Address,
-                //        Province = c.Province,
-                //        Country = c.Country,
-                //        PostalCode = c.PostalCode
-                //    }
-                //};
-
-                var customer = new CustomerModel
-                {
-                    Id= i,
-                    FirstName = c.FirstName,
-                    LastName = c.LastName,
-                    PhoneNumber = c.PhoneNumber,
-                };
-
-                builder.Entity<CustomerModel>().HasData(customer);
-                builder.Entity<AddressModel>().HasData(
-                    new
-                    {
-                        Id = i,
-                        CustomerId = i,
-                        Address = c.Address,
-                        Province = c.Province,
-                        Country = c.Country,
-                        PostalCode = c.PostalCode,
-                    });
-
-            }
-        }
-
-        private static void SeedProducts(this ModelBuilder builder, IEnumerable<ProductModel> products)
-        {
-            foreach (var product in products)
-            {
-                builder.Entity<ProductModel>().HasData(product);
-            }
-        }
-
-        private static ApplicationUser CreateUser(string email, string password)
+        private static ApplicationUser CreateUser(string id, string email, string password, string firstName, string lastname, string phoneNumber)
         {
             var user = new ApplicationUser
             {
+                Id = id,
                 UserName = email,
                 NormalizedUserName = email.ToUpper(),
                 Email = email,
                 NormalizedEmail = email.ToUpper(),
+                FirstName = firstName,
+                LastName = lastname,
+                PhoneNumber = phoneNumber,
             };
             user.PasswordHash = PASSWORD_HASHER.HashPassword(user, password);
 
             return user;
         }
-
         private static void SeedUsers(this ModelBuilder builder, IEnumerable<ApplicationUser> users)
         {
             foreach (var user in users)
@@ -587,7 +549,6 @@ namespace Lego_Prestigieux.Data
                 builder.Entity<ApplicationUser>().HasData(user);
             }
         }
-
         private static void SeedUsersToRole(this ModelBuilder builder, IEnumerable<ApplicationUser> users, IdentityRole role)
         {
             builder.Entity<IdentityRole>().HasData(role);
@@ -599,6 +560,20 @@ namespace Lego_Prestigieux.Data
                     UserId = user.Id,
                     RoleId = role.Id
                 });
+            }
+        }
+        private static void SeedAddress(this ModelBuilder builder, IEnumerable<AddressModel> addresses)
+        {
+            foreach (var ad in addresses)
+            {
+                builder.Entity<AddressModel>().HasData(ad);
+            }
+        }
+        private static void SeedProducts(this ModelBuilder builder, IEnumerable<ProductModel> products)
+        {
+            foreach (var product in products)
+            {
+                builder.Entity<ProductModel>().HasData(product);
             }
         }
     }

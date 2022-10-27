@@ -65,10 +65,12 @@
                 @if (!User.Identity.IsAuthenticated)
                 {
                     <a class=" btn btn-primary" asp-action="LogIn" asp-controller="Account">Authentification</a>
+                    <a class=" btn btn-primary" asp-action="Create" asp-controller="Account">Se créer un compte</a>
                 }
                 else
                 {
                     <a class=" btn btn-primary" asp-action="LogOut" asp-controller="Account">Déconnextion</a>
+                    <a class=" btn btn-primary" asp-action="CreateMoreAddress" asp-controller="Account">Ajouter une adresse</a>
                 }
             </div>
         </div>

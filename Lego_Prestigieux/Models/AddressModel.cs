@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Lego_Prestigieux.Data;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lego_Prestigieux.Models
@@ -16,9 +17,9 @@ namespace Lego_Prestigieux.Models
         [Required]
         public string PostalCode { get; set; }
 
-
-        public int CustomerId { get; set; }
-        public CustomerModel Customer { get; set; }
+        [ForeignKey("CustomerId")]
+        public string CustomerId { get; set; }
+        public ApplicationUser Customer { get; set; }
 
     }
 }
