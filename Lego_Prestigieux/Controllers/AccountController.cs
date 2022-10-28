@@ -107,11 +107,8 @@ namespace Lego_Prestigieux.Controllers
                 if (!ModelState.IsValid)
                     return View(createmodel);
 
-                var lastuser = _userManager.Users.OrderByDescending(u => u.Id).FirstOrDefault();
-                int id = int.Parse(lastuser.Id) + 1;
                 var user = new ApplicationUser
                 {
-                    Id = id.ToString(),
                     UserName = createmodel.EMail,
                     NormalizedUserName = createmodel.EMail.ToUpper(),
                     Email = createmodel.EMail,
@@ -127,7 +124,7 @@ namespace Lego_Prestigieux.Controllers
                     Country = createmodel.Country,
                     Province = createmodel.Province,
                     PostalCode = createmodel.PostalCode,
-                    CustomerId = id.ToString(),
+                    CustomerId = user.Id,
                 };
 
                 user.PasswordHash = PASSWORD_HASHER.HashPassword(user, createmodel.Password);
@@ -203,15 +200,13 @@ namespace Lego_Prestigieux.Controllers
                     PostalCode = cMA.PostalCode,
                     CustomerId = id,
                 };
+                cMA.CustomerId = id;
 
                 if (ModelState.IsValid)
                 {
                     _context.Add(address);
                     await _context.SaveChangesAsync();
-                    if (!User.Identity.IsAuthenticated)
-                        return RedirectToAction("CreateMoreAddressId", new { id = id});
-                    else
-                        return RedirectToAction("CreateMoreAddress");
+                    return View("ConfirmAddress", cMA);
                 }
 
                 return View(cMA);
@@ -220,6 +215,26 @@ namespace Lego_Prestigieux.Controllers
             {
                 return StatusCode(500, "ERROR: The System cannot create the address. Please try again." + "\r\n" + e);
             }
+
+        }
+
+        public IActionResult ConfirmAddress(string id, CreateMoreAddress cMA)
+        {
+            if (cMA == null)
+            {
+                return NotFound();
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+            cMA.CustomerId = id;
+
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("CreateMoreAddressId", new { id = id });
+            else
+                return RedirectToAction("CreateMoreAddress");
 
         }
     }
