@@ -36,19 +36,6 @@
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
-        <div class="row bg-secondary py-1 px-xl-5">
-                <div class="d-inline-flex align-items-center d-block d-lg-none">
-                    <a href="" class="btn px-0 ml-2">
-                        <i class="fas fa-heart text-dark"></i>
-                        <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                    </a>
-                    <a href="" class="btn px-0 ml-2">
-                        <i class="fas fa-shopping-cart text-dark"></i>
-                        <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
-                    </a>
-                </div>
-            </div>
-        </div>
         <div class="row align-items-center bg-light py-3 sm-12 d-lg-flex d-inline">
             <div class="col-lg-4">
                 <a asp-action="Index" asp-controller="Home" class="text-decoration-none">
@@ -66,6 +53,7 @@
                 {
                     <a class=" btn btn-primary" asp-action="LogIn" asp-controller="Account">Authentification</a>
                     <a class=" btn btn-primary" asp-action="Create" asp-controller="Account">Se créer un compte</a>
+
                 }
                 else
                 {
@@ -109,6 +97,7 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a class="nav-item nav-link" asp-area="" asp-controller="Home" asp-action="Index">Accueil</a>
+                            <a class="nav-item nav-link" asp-controller="Product" asp-action="FilterCategory" asp-route-category="">Magasiner</a>
                             <a class="nav-item nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                             {
@@ -120,7 +109,7 @@
                                 <i class="fas fa-heart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                             </a>
-                            <a href="" class="btn px-0 ml-3">
+                            <a asp-action="Index" asp-controller="Cart" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                             </a>
