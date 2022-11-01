@@ -1,6 +1,7 @@
 ﻿using Lego_Prestigieux.Data;
 using Lego_Prestigieux.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Lego_Prestigieux.Controllers
@@ -323,6 +325,41 @@ namespace Lego_Prestigieux.Controllers
             catch (Exception)
             {
                 return StatusCode(500, "ERROR: Could not delete this branch...");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(int productId, int quantity, string returnUrl = "/Home/Index")
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (userId == null)
+                    return RedirectToAction("Login", "Account", null);
+
+                ProductModel product = await _context.Produits.FindAsync(productId);
+
+                if (product == null)
+                    return NotFound();
+
+
+                CartItemModel cart = new CartItemModel()
+                {
+                    ProductId = product.Id,
+                    Quantity = quantity,
+                    UserId = userId
+                };
+
+                await _context.AddAsync(cart);
+                await _context.SaveChangesAsync();
+
+                return Redirect(returnUrl);
+            }
+            catch (Exception)
+            {
+                return NotFound();
             }
         }
     }

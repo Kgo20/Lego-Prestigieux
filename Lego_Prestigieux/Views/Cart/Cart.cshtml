@@ -1,4 +1,6 @@
-﻿<div class="container-fluid">
+﻿@model List<Lego_Prestigieux.Models.CartItemModel>
+
+<div class="container-fluid">
         <div class="row px-xl-5">
             <div class="col-lg-8 table-responsive mb-5">
                 <table class="table table-light table-borderless table-hover text-center mb-0">
@@ -12,7 +14,9 @@
                         </tr>
                     </thead>
                     <tbody class="align-middle">
-                       <vc:cart-item id="1"></vc:cart-item>
+                        @foreach (var item in Model) {
+                            <vc:cart-item id="item.Id"></vc:cart-item>
+                        }
                     </tbody>
                 </table>
             </div>

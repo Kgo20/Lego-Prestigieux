@@ -22,25 +22,28 @@
                     @Html.DisplayFor(model => model.Status) : @Html.DisplayFor(model => model.Quantity) <br />
                     Catégorie : @Html.DisplayFor(model => model.Category)
                 </p>
-                <div class="d-flex align-items-center mb-4 pt-2">
-                    <div class="input-group quantity mr-3" style="width: 130px;">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus">
-                                <i class="fa fa-minus"></i>
-                            </button>
+                <form asp-controller="Product" asp-action="AddToCart" 
+                            asp-route-productId="@Model.Id" asp-route-returnUrl="" method="post" role="form">
+                    <div class="d-flex align-items-center mb-4 pt-2">
+                        <div class="input-group quantity mr-3" style="width: 130px;">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-minus">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input asp-for="Quantity" type="text" class="form-control bg-secondary border-0 text-center" value="1">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-plus">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                        <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
+                        <button class="btn btn-primary px-3">
+                            <i class="fa fa-shopping-cart mr-1"></i>
+                            Ajouter au panier
+                        </button>
                     </div>
-                    <button class="btn btn-primary px-3">
-                        <i class="fa fa-shopping-cart mr-1"></i>
-                        Ajouter au panier
-                    </button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
