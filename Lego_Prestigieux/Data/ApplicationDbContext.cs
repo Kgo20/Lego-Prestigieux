@@ -8,6 +8,9 @@ namespace Lego_Prestigieux.Data
     {
         public DbSet<ProductModel> Produits { get; set; }
         public DbSet<AddressModel> Addresses { get; set; }
+        public DbSet<CommandModel> Commands { get; set; }
+        public DbSet<CartItemModel> CartItems { get; set; }
+
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }

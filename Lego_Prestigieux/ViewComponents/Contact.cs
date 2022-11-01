@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace Lego_Prestigieux.ViewComponents
 {
-    public class Contacts : ViewComponent
+    public class Contact : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View("~/Views/Shared/Components/Contact/Contact.cshtml");
+            return View("Contact");
         }
     }
 }
