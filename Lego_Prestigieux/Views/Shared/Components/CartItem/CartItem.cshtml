@@ -7,10 +7,10 @@
 
 <tr>
     <td class="align-middle"><img src="@Model.URL" alt="" style="width: 50px;">@Model.Name</td>
-    <td class="align-middle">$@Model.Price</td>
+    <td class="align-middle">$@Model.Price.ToString("0.00")</td>
     <td class="align-middle">
         <div class="input-group quantity mx-auto" style="width: 100px;">
-            <a asp-action="UpdateQuantity" asp-controller="Cart" asp-route-id="@Model.ProductId" asp-route-pic="@Model.Quantity" asp-route-moreless="@less">
+            <a asp-action="UpdateQuantity" asp-controller="Cart" asp-route-id="@Model.CartItemId" asp-route-pic="@Model.Quantity" asp-route-moreless="@less">
                 <div class="input-group-btn">
                     <div class="btn btn-sm btn-primary">
                         <i class="fa fa-minus"></i>
@@ -28,6 +28,6 @@
 
         </div>
     </td>
-    <td class="align-middle">$@Model.Total</td>
+    <td class="align-middle">$@Model.Total.ToString("0.00")</td>
     <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
 </tr>

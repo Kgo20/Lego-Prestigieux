@@ -47,7 +47,10 @@ namespace Lego_Prestigieux.Controllers
                 if (moreless == true)
                     itemcart.Quantity = itemcart.Quantity + 1;
                 else
-                    itemcart.Quantity = itemcart.Quantity - 1;
+                {
+                    if(itemcart.Quantity > 1)
+                        itemcart.Quantity = itemcart.Quantity - 1;
+                }
 
                 _context.CartItems.Update(itemcart);
                 await _context.SaveChangesAsync();
