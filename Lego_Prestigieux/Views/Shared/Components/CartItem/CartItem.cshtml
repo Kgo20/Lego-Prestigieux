@@ -29,5 +29,19 @@
         </div>
     </td>
     <td class="align-middle">$@Model.Total.ToString("0.00")</td>
-    <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+    <td class="align-middle">
+        <form method="post" asp-action="RemoveCartItem"
+           asp-controller="Cart"
+           asp-route-cartItemId="@Model.CartItemId">
+            <button class="btn btn-sm btn-danger" type="submit" 
+                onclick="return confirm('Enlever cet item?')">
+                <i class="fa fa-times"></i>
+            </button>
+        </form>
+        <script type="text/javascript">
+            $("td").on("submit", "#Form1", function () {
+                return confirm("Do you want to submit?");
+            });
+        </script>
+    </td>
 </tr>

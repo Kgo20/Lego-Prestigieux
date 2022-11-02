@@ -31,11 +31,40 @@ namespace Lego_Prestigieux.Controllers
                 List<CartItemModel> cartItems = new List<CartItemModel>();
                 cartItems = await _context.CartItems.Where(ci => ci.UserId == userId).ToListAsync();
 
-                return View("Cart",cartItems);
+                return View("Cart", cartItems);
             }
             catch (System.Exception)
             {
                 return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveCartItem(int cartItemId)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (userId == null)
+                    return RedirectToAction("Login", "Account", null);
+
+                CartItemModel cartItem = await _context.CartItems.FindAsync(cartItemId);
+
+                if (cartItem == null)
+                    return RedirectToAction("Index");
+
+                if (cartItem.UserId != userId)
+                    return RedirectToAction("Index");
+
+                _context.CartItems.Remove(cartItem);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+            catch (System.Exception)
+            {
+                return RedirectToAction("Index");
             }
         }
 
@@ -48,14 +77,14 @@ namespace Lego_Prestigieux.Controllers
                     itemcart.Quantity = itemcart.Quantity + 1;
                 else
                 {
-                    if(itemcart.Quantity > 1)
+                    if (itemcart.Quantity > 1)
                         itemcart.Quantity = itemcart.Quantity - 1;
                 }
 
                 _context.CartItems.Update(itemcart);
                 await _context.SaveChangesAsync();
             }
-            
+
 
             return RedirectToAction("Index");
         }
