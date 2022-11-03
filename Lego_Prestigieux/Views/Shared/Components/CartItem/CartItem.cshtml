@@ -6,6 +6,19 @@
 }
 
 <tr>
+    <td class="align-middle">
+        <form id="selected" method="post" asp-action="UpdateSelected"
+              asp-controller="Cart" asp-route-id="@Model.CartItemId">
+            @if (Model.Selected == true)
+            {
+                <input id="@Model.CartItemId" class="increase" type="checkbox" checked>
+            }
+            else
+            {
+                <input id="@Model.CartItemId" class="increase" type="checkbox">
+            }
+        </form>
+    </td>
     <td class="align-middle"><img src="@Model.URL" alt="" style="width: 50px;">@Model.Name</td>
     <td class="align-middle">$@Model.Price.ToString("0.00")</td>
     <td class="align-middle">
@@ -31,10 +44,10 @@
     <td class="align-middle">$@Model.Total.ToString("0.00")</td>
     <td class="align-middle">
         <form method="post" asp-action="RemoveCartItem"
-           asp-controller="Cart"
-           asp-route-cartItemId="@Model.CartItemId">
-            <button class="btn btn-sm btn-danger" type="submit" 
-                onclick="return confirm('Enlever cet item?')">
+              asp-controller="Cart"
+              asp-route-cartItemId="@Model.CartItemId">
+            <button class="btn btn-sm btn-danger" type="submit"
+                    onclick="return confirm('Enlever cet item?')">
                 <i class="fa fa-times"></i>
             </button>
         </form>

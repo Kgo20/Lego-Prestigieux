@@ -29,7 +29,8 @@ namespace Lego_Prestigieux.ViewComponents
                 Quantity = IteminCart.Quantity,
                 Total = Price * IteminCart.Quantity,
                 ProductId = Product.Id,
-                CartItemId = id
+                CartItemId = id,
+                Selected = IteminCart.Selected
             };
 
             return View("CartItem", ProductInfoCart);

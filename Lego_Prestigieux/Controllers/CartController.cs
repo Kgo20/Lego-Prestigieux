@@ -88,5 +88,24 @@ namespace Lego_Prestigieux.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult UpdateSelected(int id)
+        {
+            var itemcart = _context.CartItems.Where(p => p.Id == id).FirstOrDefault();
+            if (itemcart != null)
+            {
+                if (itemcart.Selected == true)
+                    itemcart.Selected = false;
+                else
+                    itemcart.Selected = true;
+
+
+                _context.CartItems.Update(itemcart);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
