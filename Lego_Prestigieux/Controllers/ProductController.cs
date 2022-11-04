@@ -330,7 +330,7 @@ namespace Lego_Prestigieux.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddToCart(int productId, int quantity, string returnUrl = "/Home/Index")
+        public async Task<IActionResult> AddToCart(int productId, int quantity = 1, string returnUrl = "/Home/Index")
         {
             try
             {
@@ -349,6 +349,7 @@ namespace Lego_Prestigieux.Controllers
                 {
                     ProductId = product.Id,
                     Quantity = quantity,
+                    PriceUnit = (float)(product.Price * (1- product.Reduction/100)),
                     UserId = userId
                 };
 

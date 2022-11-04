@@ -1,8 +1,10 @@
 ﻿using Lego_Prestigieux.Data;
 using Lego_Prestigieux.Models;
 using Lego_Prestigieux.ViewComponents;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -13,10 +15,15 @@ namespace Lego_Prestigieux.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CartController(ApplicationDbContext context)
+        public CartController(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
         public async Task<IActionResult> Index()
@@ -29,13 +36,42 @@ namespace Lego_Prestigieux.Controllers
                     return RedirectToAction("Login", "Account", null);
 
                 List<CartItemModel> cartItems = new List<CartItemModel>();
-                cartItems = await _context.CartItems.Where(ci => ci.UserId == userId).ToListAsync();
+                cartItems = await _context.CartItems.Where(ci => ci.UserId == userId && ci.CommandModel == null).ToListAsync();
 
-                return View("Cart",cartItems);
+                return View("Cart", cartItems);
             }
             catch (System.Exception)
             {
                 return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveCartItem(int cartItemId)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (userId == null)
+                    return RedirectToAction("Login", "Account", null);
+
+                CartItemModel cartItem = await _context.CartItems.FindAsync(cartItemId);
+
+                if (cartItem == null)
+                    return RedirectToAction("Index");
+
+                if (cartItem.UserId != userId)
+                    return RedirectToAction("Index");
+
+                _context.CartItems.Remove(cartItem);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+            catch (System.Exception)
+            {
+                return RedirectToAction("Index");
             }
         }
 
@@ -48,16 +84,81 @@ namespace Lego_Prestigieux.Controllers
                     itemcart.Quantity = itemcart.Quantity + 1;
                 else
                 {
-                    if(itemcart.Quantity > 1)
+                    if (itemcart.Quantity > 1)
                         itemcart.Quantity = itemcart.Quantity - 1;
                 }
 
                 _context.CartItems.Update(itemcart);
                 await _context.SaveChangesAsync();
             }
-            
+
 
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> UpdateSelected(int id)
+        {
+            var itemcart = _context.CartItems.Where(p => p.Id == id).FirstOrDefault();
+            if (itemcart != null)
+            {
+                if (itemcart.Selected == true)
+                    itemcart.Selected = false;
+                else
+                    itemcart.Selected = true;
+
+
+                _context.CartItems.Update(itemcart);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> CreateCommand()
+        {
+            try
+            {
+                var id = _userManager.GetUserId(HttpContext.User);
+                var user = _context.Users.Where(p => p.Id == id).FirstOrDefault();
+                var addresses = _context.Addresses.Where(p => p.CustomerId == id).ToList();
+                var form = new FormConfirmationAddressCommand
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    EMail = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    Addresses = addresses
+                };
+
+
+                var items = _context.CartItems.Where(p => p.UserId == id && p.Selected == true && p.CommandModel == null).ToList();
+                if(items.Count == 0)
+                {
+                    return RedirectToAction("Index");
+                }
+                var command = new CommandModel
+                {
+                    Products = items,
+                    Status = CommandStatus.Confirmed
+                };
+
+                if (ModelState.IsValid)
+                {
+                    _context.Add(command);
+                    await _context.SaveChangesAsync();
+                    return View("CommandForm", form);
+                }
+                return View();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "ERROR: Could not create the command, try again");
+            }
+        }
+
+
+
+
+
     }
 }

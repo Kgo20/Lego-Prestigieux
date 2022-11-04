@@ -1,0 +1,90 @@
+﻿@model Lego_Prestigieux.Models.FormConfirmationAddressCommand
+
+@{
+    ViewData["Title"] = "CommandForm";
+}
+
+<div class="container-fluid">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Créer un compte</span></h2>
+    <div class="contact-form bg-light p-30">
+        <form asp-action="Edit" asp-controller="Account">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EMail" class="control-label"></label>
+                <input asp-for="EMail" class="form-control" />
+                <span asp-validation-for="EMail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Créer un compte</span></h2>
+    <div class="contact-form bg-light p-30">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().Address)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().City)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().Province)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().Country)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Addresses.FirstOrDefault().PostalCode)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Addresses)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Province)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Country)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PostalCode)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

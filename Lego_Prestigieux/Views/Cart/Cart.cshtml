@@ -1,46 +1,62 @@
 ﻿@model List<Lego_Prestigieux.Models.CartItemModel>
 
 <div class="container-fluid">
-        <div class="row px-xl-5">
-            <div class="col-lg-8 table-responsive mb-5">
-                <table class="table table-light table-borderless table-hover text-center mb-0">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Produits</th>
-                            <th>Prix</th>
-                            <th>Quantité</th>
-                            <th>Total</th>
-                            <th>Supprimer</th>
-                        </tr>
-                    </thead>
-                    <tbody class="align-middle">
-                        @foreach (var item in Model) {
-                            <vc:cart-item id="item.Id"></vc:cart-item>
+    <div class="row px-xl-5">
+        <div class="col-lg-8 table-responsive mb-5">
+            <table class="table table-light table-borderless table-hover text-center mb-0">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Sélectionné</th>
+                        <th>Produits</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                        <th>Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    @foreach (var item in Model)
+                    {
+                        <vc:cart-item id="item.Id"></vc:cart-item>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Résumé du panier</span></h5>
+            <div class="bg-light p-30 mb-5">
+                <div class="border-bottom pb-2">
+                    <div class="d-flex justify-content-between mb-3">
+                        @{
+                            float Total = 0;
+                            float Livraison = 10;
+                            foreach (var item in Model.Where(i => i.Selected))
+                                Total += item.PriceUnit * item.Quantity;
+
+                            if (Total >= 1000 || Total == 0)
+                                Livraison = 0;
                         }
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-lg-4">
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Résumé du panier</span></h5>
-                <div class="bg-light p-30 mb-5">
-                    <div class="border-bottom pb-2">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h6>Sous-total</h6>
-                            <h6>$150</h6>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Frais de livraison</h6>
-                            <h6 class="font-weight-medium">$10</h6>
-                        </div>
+                        <h6>Sous-total</h6>
+                        <h6>@Total.ToString("0.00")$</h6>
                     </div>
-                    <div class="pt-2">
-                        <div class="d-flex justify-content-between mt-2">
-                            <h5>Total</h5>
-                            <h5>$160</h5>
-                        </div>
-                        <button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Passer la commande</button>
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Frais de livraison</h6>
+                        <h6 class="font-weight-medium">@Livraison.ToString("0.00")$</h6>
                     </div>
+                </div>
+                <div class="pt-2">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5>Total</h5>
+                        @{
+                            float TotalAL = Total + Livraison;
+                            <h5>@TotalAL.ToString("0.00")$</h5>
+                        }
+                    </div>
+                    <a asp-action="CreateCommand" asp-controller="cart" class="btn btn-block btn-primary font-weight-bold my-3 py-3">
+                        Passer la commande
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+</div>

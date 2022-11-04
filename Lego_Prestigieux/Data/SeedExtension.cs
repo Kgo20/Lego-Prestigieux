@@ -36,6 +36,7 @@ namespace Lego_Prestigieux.Data
                 Id = 1,
                 CustomerId = 1.ToString(),
                 Address = "12 rue jaque",
+                City = "New York",
                 Province = "Québec",
                 Country = "Canada",
                 PostalCode = "J0H 1R0"
@@ -45,6 +46,7 @@ namespace Lego_Prestigieux.Data
                 Id = 2,
                 CustomerId = 2.ToString(),
                 Address = "23 rue jaquet",
+                City = "New York",
                 Province = "Québec",
                 Country = "Canada",
                 PostalCode = "J0H 1R0"
@@ -54,6 +56,7 @@ namespace Lego_Prestigieux.Data
                 Id = 3,
                 CustomerId = 2.ToString(),
                 Address = "2300 rue pablo",
+                City = "New York",
                 Province = "Ontario",
                 Country = "Brésil",
                 PostalCode = "J0H 1R0"
@@ -63,6 +66,7 @@ namespace Lego_Prestigieux.Data
                 Id = 4,
                 CustomerId = 3.ToString(),
                 Address = "67 rue roberto",
+                City = "New York",
                 Province = "Amoé",
                 Country = "Pasàtoé",
                 PostalCode = "J0H 1R0"

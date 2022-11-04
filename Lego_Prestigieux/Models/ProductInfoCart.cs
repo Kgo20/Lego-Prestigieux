@@ -9,5 +9,6 @@
         public string URL { get; set; }
         public int ProductId { get; set; }
         public int CartItemId { get; set; }
+        public bool Selected { get; set; }
     }
 }
