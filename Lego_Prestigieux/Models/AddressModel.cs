@@ -11,6 +11,8 @@ namespace Lego_Prestigieux.Models
         [Required]
         public string Address { get; set; }
         [Required]
+        public string City { get; set; }
+        [Required]
         public string Province { get; set; }
         [Required]
         public string Country { get; set; }

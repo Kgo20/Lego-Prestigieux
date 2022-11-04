@@ -11,8 +11,6 @@ namespace Lego_Prestigieux.Data
         public DbSet<CommandModel> Commands { get; set; }
         public DbSet<CartItemModel> CartItems { get; set; }
 
-
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,14 +19,5 @@ namespace Lego_Prestigieux.Data
             modelBuilder.Seed();
 
         }
-
-        public DbSet<Lego_Prestigieux.Models.CreateCustomerWithAddress> CreateCustomerWithAddress { get; set; }
-
-        public DbSet<Lego_Prestigieux.Models.CreateMoreAddress> CreateMoreAddress { get; set; }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.EnableSensitiveDataLogging();
-        //}
-
     }
 }

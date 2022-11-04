@@ -2,6 +2,7 @@
 using Lego_Prestigieux.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,9 +96,6 @@ namespace Lego_Prestigieux.Controllers
             return View(model);
         }
 
-        // POST: LogIn/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateCustomerWithAddress createmodel)
@@ -121,6 +119,7 @@ namespace Lego_Prestigieux.Controllers
                 var address = new AddressModel
                 {
                     Address = createmodel.Address,
+                    City = createmodel.City,
                     Country = createmodel.Country,
                     Province = createmodel.Province,
                     PostalCode = createmodel.PostalCode,
@@ -191,10 +190,11 @@ namespace Lego_Prestigieux.Controllers
             {
                 if (!ModelState.IsValid)
                     return View(cMA);
-              
+
                 var address = new AddressModel
                 {
                     Address = cMA.Address,
+                    City = cMA.City,
                     Country = cMA.Country,
                     Province = cMA.Province,
                     PostalCode = cMA.PostalCode,
@@ -237,5 +237,29 @@ namespace Lego_Prestigieux.Controllers
                 return RedirectToAction("CreateMoreAddress");
 
         }
+
+        // POST: Adress/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(FormConfirmationAddressCommand form)
+        {
+
+            var id = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == id).FirstOrDefault();
+            user.FirstName = form.FirstName;
+            user.LastName = form.LastName;
+            user.Email = form.EMail;
+            user.PhoneNumber = form.PhoneNumber;
+
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ConfirmAddress));
+
+        }
     }
 }
+
