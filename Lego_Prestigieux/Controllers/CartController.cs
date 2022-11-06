@@ -121,15 +121,7 @@ namespace Lego_Prestigieux.Controllers
                 var id = _userManager.GetUserId(HttpContext.User);
                 var user = _context.Users.Where(p => p.Id == id).FirstOrDefault();
                 var addresses = _context.Addresses.Where(p => p.CustomerId == id).ToList();
-                var form = new FormConfirmationAddressCommand
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    EMail = user.Email,
-                    PhoneNumber = user.PhoneNumber,
-                    Addresses = addresses
-                };
-
+           
 
                 var items = _context.CartItems.Where(p => p.UserId == id && p.Selected == true && p.CommandModel == null).ToList();
                 if(items.Count == 0)
@@ -139,13 +131,24 @@ namespace Lego_Prestigieux.Controllers
                 var command = new CommandModel
                 {
                     Products = items,
-                    Status = CommandStatus.Confirmed
+                    Status = CommandStatus.Confirmed,
+                    UserId = id
                 };
 
                 if (ModelState.IsValid)
                 {
                     _context.Add(command);
                     await _context.SaveChangesAsync();
+
+                    var form = new FormConfirmationAddressCommand
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        EMail = user.Email,
+                        PhoneNumber = user.PhoneNumber,
+                        Addresses = addresses,
+                        CommandId = command.Id
+                    };
                     return View("CommandForm", form);
                 }
                 return View();

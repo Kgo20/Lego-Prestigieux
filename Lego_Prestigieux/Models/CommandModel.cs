@@ -16,6 +16,9 @@ namespace Lego_Prestigieux.Models
     {
         public int Id { get; set; }
         public ICollection<CartItemModel> Products{ get; set; }
+        public int AddressId { get; set; }
+        public string UserId { get; set; }
+
         public CommandStatus Status { get; set; }
     }
 }

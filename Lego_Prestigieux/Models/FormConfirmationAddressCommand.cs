@@ -12,5 +12,9 @@ namespace Lego_Prestigieux.Models
 
         public List<AddressModel> Addresses { get; set; }
 
+        public int? AddressId { get; set; } = null;
+        public int? CommandId { get; set; } = null;
+
+
     }
 }

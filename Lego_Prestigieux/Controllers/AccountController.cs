@@ -245,7 +245,6 @@ namespace Lego_Prestigieux.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(FormConfirmationAddressCommand form)
         {
-
             var id = _userManager.GetUserId(HttpContext.User);
             var user = _context.Users.Where(x => x.Id == id).FirstOrDefault();
             user.FirstName = form.FirstName;
@@ -253,12 +252,14 @@ namespace Lego_Prestigieux.Controllers
             user.Email = form.EMail;
             user.PhoneNumber = form.PhoneNumber;
 
+            var command = _context.Commands.Where(x => x.Id == form.CommandId).FirstOrDefault();
+            command.AddressId = (int)form.AddressId;
 
+            _context.Commands.Update(command);
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(ConfirmAddress));
-
+            return RedirectToAction("Index", "Home");
         }
     }
 }
