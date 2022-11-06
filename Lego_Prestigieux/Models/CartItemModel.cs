@@ -10,8 +10,6 @@ namespace Lego_Prestigieux.Models
         public bool Selected { get; set; } = true;
         public float PriceUnit { get; set; } = 0;
 
-
-        public int CommandId { get; set; }
         public CommandModel CommandModel { get; set; }
 
         public string UserId { get; set; }
