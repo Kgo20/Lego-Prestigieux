@@ -2,6 +2,7 @@
 using Lego_Prestigieux.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -19,7 +20,7 @@ namespace Lego_Prestigieux.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-            CommandModel Command = _context.Commands.Where(c => c.Id == id).FirstOrDefault();
+            CommandModel Command = _context.Commands.Include("Products").Where(c => c.Id == id).FirstOrDefault();
 
             var CommandVM = new CommandInfo
             {
