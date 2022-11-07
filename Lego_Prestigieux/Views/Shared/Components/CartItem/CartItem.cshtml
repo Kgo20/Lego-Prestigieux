@@ -7,17 +7,14 @@
 
 <tr>
     <td class="align-middle">
-        <form id="selected" method="post" asp-action="UpdateSelected"
-              asp-controller="Cart" asp-route-id="@Model.CartItemId">
-            @if (Model.Selected == true)
-            {
-                <input id="@Model.CartItemId" class="increase" type="checkbox" checked>
-            }
-            else
-            {
-                <input id="@Model.CartItemId" class="increase" type="checkbox">
-            }
-        </form>
+        @if (Model.Selected == true)
+        {
+            <input id="@Model.CartItemId" class="increase" type="checkbox" checked>
+        }
+        else
+        {
+            <input id="@Model.CartItemId" class="increase" type="checkbox">
+        }
     </td>
     <td class="align-middle"><img src="@Model.URL" alt="" style="width: 50px;">@Model.Name</td>
     <td class="align-middle">$@Model.Price.ToString("0.00")</td>

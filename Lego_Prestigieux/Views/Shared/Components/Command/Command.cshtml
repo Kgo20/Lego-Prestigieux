@@ -1,0 +1,31 @@
+﻿@model Lego_Prestigieux.Models.CommandInfo
+
+<tr>
+    <td class="align-middle">@Model.CommandCreationDate.ToString("g")</td>
+    <td class="align-middle">@Model.ExpectedDeliveryDate.ToString("g")</td>
+    <td class="align-middle">@Model.CommandTotal.ToString("0.00")$</td>
+    <td class="align-middle">@Model.ProductAmount.ToString()</td>
+    <td class="align-middle">@Model.Status</td>
+        @if (Model.Status == CommandStatus.Confirmed)
+        {
+        <td class="align-middle">
+            <form method="post" asp-action="Remove"
+              asp-controller="Command"
+              asp-route-commandId="@Model.CommandId">
+                <button class="btn btn-sm btn-danger" type="submit"
+                    onclick="return confirm('Annuler cette commande?')">
+                    <i class="fa fa-times"></i>
+                </button>
+            </form>
+            <script type="text/javascript">
+                $("td").on("submit", "#Form1", function () {
+                    return confirm("Do you want to submit?");
+                });
+            </script>
+        </td>
+        }
+        else {
+        <td class="align-middle">
+        </td>
+        }
+</tr>
