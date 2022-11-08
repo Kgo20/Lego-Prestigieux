@@ -118,13 +118,11 @@ namespace Lego_Prestigieux.Controllers
         {
             try
             {
-                var userId = _userManager.GetUserId(HttpContext.User);          
+                var userId = _userManager.GetUserId(HttpContext.User);
 
-                var items = _context.CartItems.Where(p => p.UserId == id && p.Selected == true && p.CommandModel == null).ToList();
-                var address = _context.Addresses.Where(i => i.CustomerId == id).FirstOrDefault();
-
-                if (items.Count == 0)
                 var cartItems = await _context.CartItems.Where(p => p.UserId == userId && p.Selected == true && p.CommandModel == null).ToListAsync();
+
+                var address = _context.Addresses.Where(i => i.CustomerId == userId).FirstOrDefault();
 
                 if(cartItems.Count == 0)
                     return RedirectToAction("Index");
