@@ -121,7 +121,9 @@ namespace Lego_Prestigieux.Controllers
                 var id = _userManager.GetUserId(HttpContext.User);          
 
                 var items = _context.CartItems.Where(p => p.UserId == id && p.Selected == true && p.CommandModel == null).ToList();
-                if(items.Count == 0)
+                var address = _context.Addresses.Where(i => i.CustomerId == id).FirstOrDefault();
+
+                if (items.Count == 0)
                 {
                     return RedirectToAction("Index");
                 }
@@ -131,11 +133,15 @@ namespace Lego_Prestigieux.Controllers
                     CommandCreationDate = DateTime.Now,
                     ExpectedDeliveryDate = DateTime.Now.AddDays(14),
                     Status = CommandStatus.Confirmed,
+                    AddressId = address.Id,
                     UserId = id
                 };
 
+
+
                 if (ModelState.IsValid)
                 {
+
                     _context.Add(command);
                     await _context.SaveChangesAsync();
 
