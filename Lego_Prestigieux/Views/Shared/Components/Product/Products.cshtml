@@ -9,7 +9,7 @@
                     <div class="product-img position-relative overflow-hidden m2">
                         <img class="img-fluid w-100" src="@product.URL">
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" method="post" asp-route-productId="@product.Id" asp-controller="Product" asp-action="AddToCart"><i class="fa fa-shopping-cart"></i></a>
                             <a class="btn btn-outline-dark btn-square" asp-route-id="@product.Id" asp-controller="Product" asp-action="Details"><i class="fa fa-search"></i></a>
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                             {

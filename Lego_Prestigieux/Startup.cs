@@ -27,7 +27,8 @@ namespace Lego_Prestigieux
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddFluentValidation(x => { x.RegisterValidatorsFromAssemblyContaining<Startup>(); });
+            //services.AddFluentValidation(x => { x.RegisterValidatorsFromAssemblyContaining<Startup>(); });
+            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
