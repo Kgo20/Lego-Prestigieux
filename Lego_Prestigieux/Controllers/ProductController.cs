@@ -77,7 +77,7 @@ namespace Lego_Prestigieux.Controllers
                     Detail = Model.Detail,
                     Price = Model.Price,
                     Reduction = Model.Reduction,
-                    Status = Model.Status,
+                    Status = Model.Quantity > 0 ? Status.Disponible : Status.Indisponible,
                     Category = (Category)Model.Category,
                     Quantity = Model.Quantity,
                     URL = Model.URL
@@ -257,6 +257,8 @@ namespace Lego_Prestigieux.Controllers
                 {
                     try
                     {
+                        productModel.Status = productModel.Quantity > 0 ? Status.Disponible : Status.Indisponible;
+
                         _context.Update(productModel);
                         await _context.SaveChangesAsync();
                     }
