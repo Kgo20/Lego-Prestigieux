@@ -49,6 +49,13 @@ namespace Lego_Prestigieux.Controllers
                 foreach (var item in command.Products)
                 {
                     item.CommandModel = null;
+
+                    var product = await _context.Produits.FindAsync(item.ProductId);
+
+                    if (product.Status == Status.Indisponible && item.Quantity > 0)
+                        product.Status = Status.Disponible;
+
+                    product.Quantity += item.Quantity;
                 }
 
                 command.Status = CommandStatus.Canceled;
