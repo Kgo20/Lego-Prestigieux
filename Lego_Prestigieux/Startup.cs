@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +28,8 @@ namespace Lego_Prestigieux
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            //services.AddFluentValidation(x => { x.RegisterValidatorsFromAssemblyContaining<Startup>(); });
-            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+            services.AddFluentValidation(x => { x.RegisterValidatorsFromAssemblyContaining<Startup>(); });
+            //services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -38,6 +39,12 @@ namespace Lego_Prestigieux
              .AddEntityFrameworkStores<ApplicationDbContext>()
              .AddSignInManager()
              .AddDefaultTokenProviders();
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.AddMvc()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
 
             services.AddAuthentication(options =>
             {
@@ -63,6 +70,13 @@ namespace Lego_Prestigieux
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseHttpsRedirection();
+
+            var supportedCultures = new[] { "ca" };
+            var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
+
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseEndpoints(endpoints =>
             {
