@@ -71,7 +71,7 @@ namespace Lego_Prestigieux
             app.UseAuthorization();
             app.UseHttpsRedirection();
 
-            var supportedCultures = new[] { "ca" };
+            var supportedCultures = new[] { "en-US" };
             var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
                 .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);

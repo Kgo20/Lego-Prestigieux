@@ -154,7 +154,6 @@ namespace Lego_Prestigieux.Controllers
 
                 if (ModelState.IsValid)
                 {
-
                     _context.Add(command);
                     await _context.SaveChangesAsync();
 
