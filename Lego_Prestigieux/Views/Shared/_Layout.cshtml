@@ -81,7 +81,7 @@
                         <a asp-controller="Product" asp-action="FilterCategory" asp-route-category="4" class="nav-item nav-link">Pour adultes</a>
                         <a asp-controller="Product" asp-action="FilterCategory" asp-route-category="5" class="nav-item nav-link">Pour enfants</a>
                         <a asp-controller="Product" asp-action="FilterCategory" asp-route-category="6" class="nav-item nav-link">Star Wars</a>
-                        <a asp-controller="Product" asp-action="FilterCategory" asp-route-category=""  class="nav-item nav-link">Tous les produits</a>
+                        <a asp-controller="Product" asp-action="FilterCategory" asp-route-category="" class="nav-item nav-link">Tous les produits</a>
                     </div>
                 </nav>
             </div>
@@ -99,7 +99,10 @@
                             <a class="nav-item nav-link" asp-area="" asp-controller="Home" asp-action="Index">Accueil</a>
                             <a class="nav-item nav-link" asp-controller="Product" asp-action="FilterCategory" asp-route-category="">Magasiner</a>
                             <a class="nav-item nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
-                            <a class="nav-item nav-link" asp-area="" asp-controller="Command" asp-action="List">Commandes</a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a class="nav-item nav-link" asp-area="" asp-controller="Command" asp-action="List">Commandes</a>
+                            }
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                             {
                                 <a class="nav-item nav-link" asp-area="" asp-controller="Product" asp-action="Create">Créer un nouveau produit</a>

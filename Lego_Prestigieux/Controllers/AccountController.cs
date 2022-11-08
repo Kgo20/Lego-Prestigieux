@@ -259,7 +259,107 @@ namespace Lego_Prestigieux.Controllers
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("CompleteCommand", "Command", new { commandId = form.CommandId });
+        }
+
+        // GET: ProductController/Edit/5
+        public async Task<IActionResult> EditAddress(int? id, int? cid)
+        {
+            // Envoie au formulaire
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                if (cid == null)
+                {
+                    return NotFound();
+                }
+
+                var address = await _context.Addresses.FindAsync(id);
+                if (address == null)
+                {
+                    return NotFound();
+                }
+
+                var editAddress = new EditAddress
+                {
+                    Id = address.Id,
+                    Address = address.Address,
+                    City = address.City,
+                    Province = address.Province,
+                    Country = address.Country,
+                    PostalCode = address.PostalCode,
+                    CustomerId = address.CustomerId,
+                    CommandId = (int)cid
+                };
+
+
+                return View("EditAddress", editAddress);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "ERROR: Could not load this...");
+            }
+        }
+
+        // POST: ProductController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAddress(int id, EditAddress editAddress)
+        {
+            // sauvegarde les changements
+            try
+            {
+                if (id != editAddress.Id)
+                {
+                    return NotFound();
+                }
+
+                var addressModel = new AddressModel
+                {
+                    Id = editAddress.Id,
+                    Address = editAddress.Address,
+                    City = editAddress.City,
+                    Province = editAddress.Province,
+                    Country = editAddress.Country,
+                    PostalCode = editAddress.PostalCode,
+                    CustomerId = editAddress.CustomerId,
+                };
+
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(addressModel);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!AddressModelExists(addressModel.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction("CommandForm", "Cart", new { id = editAddress.CommandId });
+                }
+                return View("EditAddress", editAddress);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "ERROR: Could not edit this...");
+            }
+        }
+
+        private bool AddressModelExists(int id)
+        {
+            return _context.Addresses.Any(e => e.Id == id);
         }
     }
 }

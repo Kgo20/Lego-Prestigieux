@@ -89,5 +89,99 @@ namespace Lego_Prestigieux.Controllers
                 return NotFound();
             }
         }
+
+        public async Task<IActionResult> CompleteCommand(int commandId)
+        {
+            if (commandId == 0)
+            {
+                return NotFound();
+            }
+
+            var command = _context.Commands.Where(c => c.Id == commandId).FirstOrDefault();
+            if (command == null)
+                return NotFound();
+
+            var address = _context.Addresses.Where(c => c.Id == command.AddressId).FirstOrDefault();
+            if (address == null)
+                return NotFound();
+
+            var user = _context.Users.Where(c => c.Id == command.UserId).FirstOrDefault();
+            if (user == null)
+                return NotFound();
+
+            var products = _context.CartItems.Where(c => c.CommandModel.Id == commandId).ToList();
+            if (products == null)
+                return NotFound();
+
+            List<ProductInfoCart> productsinfo = new List<ProductInfoCart>();
+            foreach (var item in products)
+            {
+                var p = _context.Produits.Where(p => p.Id == item.ProductId).FirstOrDefault();
+                float Price = (float)(100 - p.Reduction) * (float)0.01 * p.Price;
+                var productinfo = new ProductInfoCart
+                {
+                    URL = p.URL,
+                    Name = p.Name,
+                    Price = Price,
+                    Quantity = p.Quantity,
+                    Total = Price * p.Quantity,
+                    ProductId = p.Id,
+                    CartItemId = item.Id,
+                    Selected = item.Selected
+                };
+
+                productsinfo.Add(productinfo);
+            }
+
+            float TotalBeforeTaxes = 0;
+            float Shippingcost = 0;
+            foreach (var product in products)
+            {
+                TotalBeforeTaxes += (product.PriceUnit * product.Quantity);
+            }
+
+            if(TotalBeforeTaxes < 1000)
+            {
+                Shippingcost = 10;
+            }
+
+            var detail = new CompleteCommand
+            {
+                CommandId = commandId,
+                CommandCreationDate = command.CommandCreationDate,
+                ExpectedDeliveryDate = command.ExpectedDeliveryDate,
+
+                Products = productsinfo,
+
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                EMail = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                AddressLivraison = address,
+
+                TotalBeforeTaxes = TotalBeforeTaxes,
+                Taxes = TotalBeforeTaxes * 0.14975f,
+                Total = TotalBeforeTaxes * 1.14975f,
+                ShippingCost = Shippingcost
+            };
+
+            return View("CommandDetail", detail);
+        }
+
+
+        public async Task<IActionResult> ChangeStatus(int commandId)
+        {
+
+            var command = _context.Commands.Where(x => x.Id == commandId).FirstOrDefault();
+            if (command == null)
+                return NotFound();
+
+            command.Status = CommandStatus.InPreparation;
+
+            _context.Commands.Update(command);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("List");
+        }
     }
 }
