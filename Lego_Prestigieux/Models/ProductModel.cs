@@ -41,7 +41,7 @@ namespace Lego_Prestigieux.Models
                .NotEmpty().WithMessage("This field is required");
 
                 RuleFor(e => e.Price)
-                .LessThan(int.MaxValue).WithMessage("The price need to be under " + int.MaxValue.ToString())
+                .LessThan(float.MaxValue).WithMessage("The price need to be under " + float.MaxValue.ToString())
                 .NotEmpty().WithMessage("This field is required");
 
                 RuleFor(e => e.Quantity)

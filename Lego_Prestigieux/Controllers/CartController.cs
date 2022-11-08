@@ -121,7 +121,6 @@ namespace Lego_Prestigieux.Controllers
                 var id = _userManager.GetUserId(HttpContext.User);
                 var user = _context.Users.Where(p => p.Id == id).FirstOrDefault();
                 var addresses = _context.Addresses.Where(p => p.CustomerId == id).ToList();
-           
 
                 var items = _context.CartItems.Where(p => p.UserId == id && p.Selected == true && p.CommandModel == null).ToList();
                 if(items.Count == 0)
@@ -158,10 +157,5 @@ namespace Lego_Prestigieux.Controllers
                 return StatusCode(500, "ERROR: Could not create the command, try again");
             }
         }
-
-
-
-
-
     }
 }
