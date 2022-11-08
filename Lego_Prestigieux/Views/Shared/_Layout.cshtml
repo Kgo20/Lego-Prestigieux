@@ -51,14 +51,14 @@
                 <h5>450-999-9999</h5>
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <a class=" btn btn-primary" asp-action="LogIn" asp-controller="Account">se connecter</a>
-                    <a class=" btn btn-primary" asp-action="Create" asp-controller="Account">créer un compte</a>
+                    <a class=" btn btn-primary" asp-action="LogIn" asp-controller="Account">Se Connecter</a>
+                    <a class=" btn btn-primary" asp-action="Create" asp-controller="Account">Créer un Compte</a>
 
                 }
                 else
                 {
                     <a class=" btn btn-primary" asp-action="LogOut" asp-controller="Account">Déconnexion</a>
-                    <a class=" btn btn-primary" asp-action="CreateMoreAddress" asp-controller="Account">Ajouter une adresse</a>
+                    <a class=" btn btn-primary" asp-action="CreateMoreAddress" asp-controller="Account">Ajouter une Adresse</a>
                 }
             </div>
         </div>
@@ -149,7 +149,7 @@
                                 <div class="d-flex flex-column justify-content-start ">
                                     <a class="text-secondary mb-2" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-angle-right mr-2"></i>Accueil</a>
                                     <a class="text-secondary mb-2" asp-controller="Product" asp-action="FilterCategory" asp-route-category=""><i class="fa fa-angle-right mr-2"></i>Magasiner</a>
-                                    <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Panier</a>
+                                    <a class="text-secondary mb-2" asp-action="Index" asp-controller="Cart"><i class="fa fa-angle-right mr-2"></i>Panier</a>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-5">

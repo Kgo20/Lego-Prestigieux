@@ -118,23 +118,38 @@ namespace Lego_Prestigieux.Controllers
         {
             try
             {
-                var id = _userManager.GetUserId(HttpContext.User);          
+                var userId = _userManager.GetUserId(HttpContext.User);          
 
                 var items = _context.CartItems.Where(p => p.UserId == id && p.Selected == true && p.CommandModel == null).ToList();
                 var address = _context.Addresses.Where(i => i.CustomerId == id).FirstOrDefault();
 
                 if (items.Count == 0)
-                {
+                var cartItems = await _context.CartItems.Where(p => p.UserId == userId && p.Selected == true && p.CommandModel == null).ToListAsync();
+
+                if(cartItems.Count == 0)
                     return RedirectToAction("Index");
+
+                foreach (var item in cartItems)
+                {
+                    var product = await _context.Produits.FindAsync(item.ProductId);
+
+                    if (item.Quantity > product.Quantity)
+                        return RedirectToAction("Index");
+
+                    product.Quantity -= item.Quantity;
+
+                    if (product.Quantity == 0)
+                        product.Status = Status.Indisponible;
                 }
+
                 var command = new CommandModel
                 {
-                    Products = items,
+                    Products = cartItems,
                     CommandCreationDate = DateTime.Now,
                     ExpectedDeliveryDate = DateTime.Now.AddDays(14),
                     Status = CommandStatus.Confirmed,
                     AddressId = address.Id,
-                    UserId = id
+                    UserId = userId
                 };
 
 
