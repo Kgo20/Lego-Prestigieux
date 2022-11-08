@@ -1,6 +1,7 @@
 ﻿using Lego_Prestigieux.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Security.Policy;
 
@@ -75,6 +76,7 @@ namespace Lego_Prestigieux.Data
             builder.SeedAddress(addresses);
 
             #endregion
+
 
             #region SeedProduct
             var products = new List<ProductModel>()
@@ -528,6 +530,113 @@ namespace Lego_Prestigieux.Data
             };
             builder.SeedProducts(products);
             #endregion
+
+            #region SeedCommand
+            List<CommandModel> commands = new List<CommandModel>();
+            commands.Add(new CommandModel
+            {
+                Id = 1,
+                AddressId = 1,
+                Status = CommandStatus.InPreparation,
+                UserId = "1",
+                CommandCreationDate = DateTime.Now,
+                ExpectedDeliveryDate = DateTime.Now.AddDays(14),
+            });
+            commands.Add(new CommandModel
+            {
+                Id = 2,
+                AddressId = 1,
+                Status = CommandStatus.Confirmed,
+                UserId = "1",
+                CommandCreationDate = DateTime.Now,
+                ExpectedDeliveryDate = DateTime.Now.AddDays(14),
+            });
+            commands.Add(new CommandModel
+            {
+                Id = 3,
+                AddressId = 1,
+                Status = CommandStatus.Confirmed,
+                UserId = "1",
+                CommandCreationDate = DateTime.Now,
+                ExpectedDeliveryDate = DateTime.Now.AddDays(14),
+            });
+            commands.Add(new CommandModel
+            {
+                Id = 4,
+                AddressId = 1,
+                Status = CommandStatus.InPreparation,
+                UserId = "1",
+                CommandCreationDate = DateTime.Now,
+                ExpectedDeliveryDate = DateTime.Now.AddDays(14),
+            });
+            commands.Add(new CommandModel
+            {
+                Id = 5,
+                AddressId = 1,
+                Status = CommandStatus.Confirmed,
+                UserId = "1",
+                CommandCreationDate = DateTime.Now,
+                ExpectedDeliveryDate = DateTime.Now.AddDays(14),
+            });
+
+
+            List<CartItemModel> cartItems = new List<CartItemModel>();
+            cartItems.Add(new CartItemModel
+            {
+                Id = 1,
+                ProductId = 1,
+                Quantity = 1,
+                Selected= true,
+                PriceUnit = 5000,
+                UserId = "1",
+                CommandModelId = commands[0].Id
+            });
+            cartItems.Add(new CartItemModel
+            {
+                Id = 2,
+                ProductId = 2,
+                Quantity = 2,
+                Selected = true,
+                PriceUnit = 2500,
+                UserId = "1",
+                CommandModelId = commands[1].Id
+            });
+            cartItems.Add(new CartItemModel
+            {
+                Id = 3,
+                ProductId = 3,
+                Quantity = 1,
+                Selected = true,
+                PriceUnit = 1000,
+                UserId = "1",
+                CommandModelId = commands[2].Id
+            });
+            cartItems.Add(new CartItemModel
+            {
+                Id = 4,
+                ProductId = 4,
+                Quantity = 1,
+                Selected = true,
+                PriceUnit = 3456,
+                UserId = "1",
+                CommandModelId = commands[3].Id
+            });
+            cartItems.Add(new CartItemModel
+            {
+                Id = 5,
+                ProductId = 5,
+                Quantity = 1,
+                Selected = true,
+                PriceUnit = 128,
+                UserId = "1",
+                CommandModelId = commands[4].Id
+            });
+
+            builder.SeedCommand(commands);
+            builder.SeedCartItem(cartItems);
+
+
+            #endregion
         }
         private static ApplicationUser CreateUser(string id, string email, string password, string firstName, string lastname, string phoneNumber)
         {
@@ -578,6 +687,22 @@ namespace Lego_Prestigieux.Data
             foreach (var product in products)
             {
                 builder.Entity<ProductModel>().HasData(product);
+            }
+        }
+
+        private static void SeedCommand(this ModelBuilder builder, IEnumerable<CommandModel> commands)
+        {
+            foreach (var command in commands)
+            {
+                builder.Entity<CommandModel>().HasData(command);
+            }
+        }
+
+        private static void SeedCartItem(this ModelBuilder builder, IEnumerable<CartItemModel> cartItems)
+        {
+            foreach (var cartItem in cartItems)
+            {
+                builder.Entity<CartItemModel>().HasData(cartItem);
             }
         }
     }
