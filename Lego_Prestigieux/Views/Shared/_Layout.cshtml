@@ -51,14 +51,14 @@
                 <h5>450-999-9999</h5>
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <a class=" btn btn-primary" asp-action="LogIn" asp-controller="Account">se connecter</a>
-                    <a class=" btn btn-primary" asp-action="Create" asp-controller="Account">créer un compte</a>
+                    <a class=" btn btn-primary" asp-action="LogIn" asp-controller="Account">Se Connecter</a>
+                    <a class=" btn btn-primary" asp-action="Create" asp-controller="Account">Créer un Compte</a>
 
                 }
                 else
                 {
                     <a class=" btn btn-primary" asp-action="LogOut" asp-controller="Account">Déconnexion</a>
-                    <a class=" btn btn-primary" asp-action="CreateMoreAddress" asp-controller="Account">Ajouter une adresse</a>
+                    <a class=" btn btn-primary" asp-action="CreateMoreAddress" asp-controller="Account">Ajouter une Adresse</a>
                 }
             </div>
         </div>

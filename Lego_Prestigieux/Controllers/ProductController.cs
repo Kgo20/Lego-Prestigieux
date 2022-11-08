@@ -351,7 +351,7 @@ namespace Lego_Prestigieux.Controllers
                     return NotFound();
 
                 List<CartItemModel> cartItems = new List<CartItemModel>();
-                cartItems = await _context.CartItems.Where(ci => ci.UserId == userId && ci.ProductId == product.Id).ToListAsync();
+                cartItems = await _context.CartItems.Where(ci => ci.UserId == userId && ci.ProductId == product.Id && ci.CommandModel == null).ToListAsync();
 
                 if (cartItems.Count() == 1)
                 {
