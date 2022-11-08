@@ -25,8 +25,8 @@ namespace Lego_Prestigieux.ViewComponents
             var CommandVM = new CommandInfo
             {
                 CommandId = Command.Id,
-                CommandCreationDate = DateTime.Now,
-                ExpectedDeliveryDate = DateTime.Now.AddDays(14),
+                CommandCreationDate = Command.CommandCreationDate,
+                ExpectedDeliveryDate = Command.ExpectedDeliveryDate,
                 CommandTotal = Command.Products.Sum(p => p.PriceUnit * p.Quantity),
                 ProductAmount = Command.Products.Count(),
                 Status = Command.Status

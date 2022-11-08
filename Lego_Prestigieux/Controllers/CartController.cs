@@ -118,9 +118,7 @@ namespace Lego_Prestigieux.Controllers
         {
             try
             {
-                var id = _userManager.GetUserId(HttpContext.User);
-                var user = _context.Users.Where(p => p.Id == id).FirstOrDefault();
-                var addresses = _context.Addresses.Where(p => p.CustomerId == id).ToList();
+                var id = _userManager.GetUserId(HttpContext.User);          
 
                 var items = _context.CartItems.Where(p => p.UserId == id && p.Selected == true && p.CommandModel == null).ToList();
                 if(items.Count == 0)
@@ -130,6 +128,8 @@ namespace Lego_Prestigieux.Controllers
                 var command = new CommandModel
                 {
                     Products = items,
+                    CommandCreationDate = DateTime.Now,
+                    ExpectedDeliveryDate = DateTime.Now.AddDays(14),
                     Status = CommandStatus.Confirmed,
                     UserId = id
                 };
@@ -139,16 +139,7 @@ namespace Lego_Prestigieux.Controllers
                     _context.Add(command);
                     await _context.SaveChangesAsync();
 
-                    var form = new FormConfirmationAddressCommand
-                    {
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        EMail = user.Email,
-                        PhoneNumber = user.PhoneNumber,
-                        Addresses = addresses,
-                        CommandId = command.Id
-                    };
-                    return View("CommandForm", form);
+                    return RedirectToAction("CommandForm", new { command.Id });
                 }
                 return View();
             }
@@ -157,5 +148,46 @@ namespace Lego_Prestigieux.Controllers
                 return StatusCode(500, "ERROR: Could not create the command, try again");
             }
         }
+
+        public async Task<IActionResult> CommandForm(int id)
+        {
+            var command = _context.Commands.Where(p => p.Id == id).FirstOrDefault();
+            if (command == null)
+            {
+                return StatusCode(500, "ERROR: try again");
+            }
+
+            var user = _context.Users.Where(p => p.Id == command.UserId).FirstOrDefault();
+            if (user == null)
+            {
+                return StatusCode(500, "ERROR: try again");
+
+            }
+            var addresses = _context.Addresses.Where(p => p.CustomerId == command.UserId).ToList();
+            if (addresses == null)
+            {
+                return StatusCode(500, "ERROR: try again");
+
+            }
+
+
+            var form = new FormConfirmationAddressCommand
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                EMail = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Addresses = addresses,
+                CommandId = command.Id
+            };
+
+
+            return View("CommandForm", form);
+        }
+
+
+
+
+
     }
 }
