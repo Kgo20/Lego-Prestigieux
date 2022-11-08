@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Lego_Prestigieux.Models
 {
@@ -19,5 +20,16 @@ namespace Lego_Prestigieux.Models
         public string CustomerId { get; set; }
 
         public int CommandId { get; set; }
+    }
+
+
+    public class EditAddressValidator : AbstractValidator<EditAddress>
+    {
+        public EditAddressValidator()
+        {
+            RuleFor(e => e.PostalCode).Matches("^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$")
+          .WithMessage("Le code postal n'a pas le bon format")
+          .NotEmpty().WithMessage("This field is required");
+        }
     }
 }
