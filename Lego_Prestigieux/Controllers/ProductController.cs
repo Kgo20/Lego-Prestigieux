@@ -328,6 +328,12 @@ namespace Lego_Prestigieux.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AddToCart(int productId)
+        {
+            return await AddToCart(productId, 1);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int productId, int quantity = 1, string returnUrl = "/Home/Index")
@@ -344,16 +350,26 @@ namespace Lego_Prestigieux.Controllers
                 if (product == null)
                     return NotFound();
 
+                List<CartItemModel> cartItems = new List<CartItemModel>();
+                cartItems = await _context.CartItems.Where(ci => ci.UserId == userId && ci.ProductId == product.Id).ToListAsync();
 
-                CartItemModel cart = new CartItemModel()
+                if (cartItems.Count() == 1)
                 {
-                    ProductId = product.Id,
-                    Quantity = quantity,
-                    PriceUnit = (float)(product.Price * (1- product.Reduction/100)),
-                    UserId = userId
-                };
+                    cartItems[0].Quantity += quantity;
+                }
+                else
+                {
+                    CartItemModel cart = new CartItemModel()
+                    {
+                        ProductId = product.Id,
+                        Quantity = quantity,
+                        PriceUnit = (float)(product.Price * (1 - product.Reduction / 100)),
+                        UserId = userId
+                    };
 
-                await _context.AddAsync(cart);
+                    await _context.AddAsync(cart);
+                }
+
                 await _context.SaveChangesAsync();
 
                 return Redirect(returnUrl);
