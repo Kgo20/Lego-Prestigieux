@@ -25,11 +25,6 @@ namespace Lego_Prestigieux.Controllers
 
         }
 
-        public async Task<IActionResult> Details(int commandId)
-        {
-            return NotFound();
-        }
-
         public async Task<IActionResult> Remove(int commandId)
         {
             try
