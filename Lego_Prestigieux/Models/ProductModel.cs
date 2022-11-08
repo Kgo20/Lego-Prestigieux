@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace Lego_Prestigieux.Models
 {
@@ -25,6 +27,7 @@ namespace Lego_Prestigieux.Models
         [NotNull]
         public string Name { get; set; }
         public string Detail { get; set; }
+        //[DisplayFormat(DataFormatString = "{Binding Path=Power, Mode=TwoWay, UpdateSourceTrigger=LostFocus ,StringFormat={}{0:#.##}}")]
         public float Price { get; set; }
         public float? Reduction { get; set; } = 0;
         public int Quantity { get; set; }
@@ -37,15 +40,15 @@ namespace Lego_Prestigieux.Models
             public ProductValidator()
             {
                 RuleFor(e => e.Name)
-               .Matches(@"^[A-Za-z0-9- ]{3,30}$").WithMessage("Name don't has a good format")
+               .Matches(@"^[A-Za-z0-9- ]{3,30}$").WithMessage("Name does not have a good format")
                .NotEmpty().WithMessage("This field is required");
 
                 RuleFor(e => e.Price)
-                .LessThan(float.MaxValue).WithMessage("The price need to be under " + float.MaxValue.ToString())
+                .LessThan(float.MaxValue).WithMessage("The price needs to be under " + float.MaxValue.ToString())
                 .NotEmpty().WithMessage("This field is required");
 
                 RuleFor(e => e.Quantity)
-                .LessThan(int.MaxValue).WithMessage("The quantity need to be under " + int.MaxValue.ToString())
+                .LessThan(int.MaxValue).WithMessage("The quantity needs to be under " + int.MaxValue.ToString())
                 .NotEmpty().WithMessage("This field is required");
 
                 RuleFor(e => e.Reduction).LessThan(100).WithMessage("The minimum reduction must be less than or equal to 100");
