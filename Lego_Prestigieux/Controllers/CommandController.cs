@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using System.Security.Claims;
+using Stripe;
+using Microsoft.Extensions.Options;
 
 namespace Lego_Prestigieux.Controllers
 {
@@ -15,14 +17,16 @@ namespace Lego_Prestigieux.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IOptions<StripeOptions> stripeOptions;
 
         public CommandController(
             ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IOptions<StripeOptions> stripeOptions)
         {
             _context = context;
             _userManager = userManager;
-
+            this.stripeOptions = stripeOptions;
         }
 
         public async Task<IActionResult> Remove(int commandId)
@@ -168,6 +172,24 @@ namespace Lego_Prestigieux.Controllers
             };
 
             return View("CommandDetail", detail);
+        }
+
+        [HttpPost]
+        public JsonResult Charges([FromBody] ChargesModel model)
+        {
+            StripeConfiguration.SetApiKey(stripeOptions.Value.SecretKey);
+
+            var options = new ChargeCreateOptions
+            {
+                Amount = model.AmountInCents,
+                Description = model.Description,
+                SourceId = model.Token,
+                Currency = model.CurrencyCode
+            };
+            var service = new ChargeService();
+            Charge charge = service.Create(options);
+
+            return Json(charge.ToJson());
         }
 
 

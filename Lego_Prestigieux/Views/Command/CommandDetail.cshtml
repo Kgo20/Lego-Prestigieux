@@ -1,4 +1,7 @@
-﻿@model Lego_Prestigieux.Models.CompleteCommand
+﻿@using Microsoft.Extensions.Options
+@model Lego_Prestigieux.Models.CompleteCommand
+
+@inject IOptions<StripeOptions> StripeOptions
 
 @{
     ViewData["Title"] = "CommandDetail";
@@ -164,11 +167,173 @@
                         <h5>@Model.Total.ToString("0.00")$</h5>
                     </div>
                     
-                     <a asp-action="ChangeStatus" asp-controller="Command" asp-route-commandid="@Model.CommandId" class="btn btn-block btn-primary font-weight-bold my-3 py-3">
+                     @*<a asp-action="ChangeStatus" asp-controller="Command" asp-route-commandid="@Model.CommandId" class="btn btn-block btn-primary font-weight-bold my-3 py-3">
                         Confirmer la commande
-                        </a>
+                        </a>*@
+
+                    <form method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="float-right">
+                                    <button id="payment-request-button" class="btn btn-primary" type="button" href="#payment-form">Payer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<section id="payment-section" class="modal fade rounded" role="dialog">
+    <form id="payment-form" class="modal-dialog modal-content bg-light" method="post" accept-charset="UTF-8">
+
+        <div class="modal-header">
+            <h4 class="modal-title">Payment Informations</h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-row mb-2">
+                <div class="col">
+                    <label for="name" class="control-label">Name</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input id="name" name="name" class="form-control border-left-0" type="text" placeholder="Nom" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col">
+                    <label for="phone" class="control-label">Phone</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white"><i class="fas fa-phone"></i></span>
+                        </div>
+                        <input id="phone" name="phone" class="form-control border-left-0" type="text" placeholder="Phone number" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col">
+                    <label for="email" class="control-label">Email</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white"><i class="fas fa-at"></i></span>
+                        </div>
+                        <input id="email" class="form-control border-left-0" type="email" placeholder="Email address" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col">
+                    <label for="card" class="control-label">Card</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white"><i class="fas fa-credit-card"></i></span>
+                        </div>
+                        <div id="card" class="form-control border-left-0"></div>
+                    </div>
+                    <div id="card-errors" role="alert"></div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer row">
+                <div class="float-right">
+                    <button id="cancel-btn" type="button" class="btn btn-outline-danger">Cancel</button>
+                    <button id="reset-btn" type="reset" class="btn btn-outline-secondary">Reset</button>
+                    <button id="submit-btn" type="submit" class="btn btn-success">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+@section scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script>
+        (function () {
+            "use strict";
+
+            $(document).ready(function () {
+                $("#payment-request-button").on("click", function () {
+                    $("#payment-section").modal({
+                        backdrop: 'static'
+                    });
+
+                    $("#cancel-btn").on("click", function () {
+                        $("#payment-section").modal("hide");
+                    });
+                });
+
+                let stripe = Stripe("@StripeOptions.Value.PublicKey");
+                let elements = stripe.elements();
+
+                let card = elements.create("card", {
+                    style: {
+                        base: {
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            color: "#495057",
+                        }
+                    },
+                    hideIcon: true,
+                    hidePostalCode: true
+                });
+
+                card.mount("#card");
+
+                card.addEventListener('change', function (event) {
+                    var displayError = document.getElementById('card-errors');
+                    if (event.error) {
+                        displayError.textContent = event.error.message;
+                    } else {
+                        displayError.textContent = '';
+                    }
+                });
+
+                // Create a token or display an error when the form is submitted.
+                var form = $("#payment-form");
+                form.on('submit', function (e) {
+                    e.preventDefault();
+
+                    stripe.createToken(card).then(function (result) {
+                        if (result.error) {
+                            $("#card-errors").textContent = result.error.message;
+                        } else {
+                            // Send the token to your server.
+                            stripeTokenHandler(result.token);
+                        }
+                    });
+                });
+
+                function stripeTokenHandler(token) {
+                    fetch('/payment/charges', {
+                        method: 'post',
+                        headers: { 'content-type': 'application/json' },
+                        body: JSON.stringify({
+                            token: token.id,
+                            description: "@Model.CommandId",
+                            amountInCents: @Model.Total * 100, // Price in cents
+                            currencyCode: "cad"
+                        })
+                        // Report to the browser that the payment was successful or failed.
+                    }).then(function (response) {
+                        if (response.ok) {
+                            window.location.replace("@Url.Action("Confirmation")")
+                        } else {
+                            e.complete('fail');
+                        }
+                    });
+                }
+            });
+        })();
+    </script>
+}
