@@ -1,5 +1,6 @@
 using FluentValidation.AspNetCore;
 using Lego_Prestigieux.Data;
+using Lego_Prestigieux.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +29,9 @@ namespace Lego_Prestigieux
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<StripeOptions>(options =>
+                Configuration.GetSection("StripeTest").Bind(options)
+            );
             services.AddControllersWithViews();
             services.AddFluentValidation(x => { x.RegisterValidatorsFromAssemblyContaining<Startup>(); });
             //services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
@@ -57,6 +62,8 @@ namespace Lego_Prestigieux
         {
             if (env.IsDevelopment())
             {
+                StripeConfiguration.SetApiKey(Configuration.GetConnectionString("Stripe:TestSecretKey"));
+
                 app.UseDeveloperExceptionPage();
             }
             else
