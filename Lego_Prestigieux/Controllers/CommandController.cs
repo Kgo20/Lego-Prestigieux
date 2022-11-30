@@ -125,8 +125,8 @@ namespace Lego_Prestigieux.Controllers
                     URL = p.URL,
                     Name = p.Name,
                     Price = Price,
-                    Quantity = p.Quantity,
-                    Total = Price * p.Quantity,
+                    Quantity = item.Quantity,
+                    Total = Price * item.Quantity,
                     ProductId = p.Id,
                     CartItemId = item.Id,
                     Selected = item.Selected
