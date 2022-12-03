@@ -168,14 +168,16 @@ namespace Lego_Prestigieux.Controllers
                 TotalBeforeTaxes = TotalBeforeTaxes,
                 Taxes = TotalBeforeTaxes * 0.14975f,
                 Total = TotalBeforeTaxes * 1.14975f,
-                ShippingCost = Shippingcost
+                ShippingCost = Shippingcost,
+
+                CommandStatus = command.Status
             };
 
             return View("CommandDetail", detail);
         }
 
         [HttpPost]
-        public JsonResult Charges([FromBody] ChargesModel model)
+        public JsonResult Charges([FromBody]ChargesModel model)
         {
             StripeConfiguration.SetApiKey(stripeOptions.Value.SecretKey);
 
@@ -206,6 +208,60 @@ namespace Lego_Prestigieux.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("List");
+        }
+
+        public async Task CreateBilling(
+            string Name, string PhoneNumber,
+            string Address, string City, string Province,
+            string Country, string PostalCode,
+            string LastNumber, int CommandId)
+        {
+            try
+            {
+                var billing = new BillingModel
+                {
+                    Name = Name,
+                    CreationDate = DateTime.Now,
+                    LastNumber = LastNumber,
+                    PhoneNumber = PhoneNumber,
+                    Address = Address,
+                    City = City,
+                    Province = Province,
+                    Country = Country,
+                    PostalCode = PostalCode,
+                    CommandId = CommandId,
+                };
+
+                var command = _context.Commands.Where(x => x.Id == CommandId).FirstOrDefault();
+
+                command.Status = CommandStatus.InDelivery;
+
+
+
+                if (ModelState.IsValid)
+                {
+                    _context.Commands.Update(command);
+                    _context.Add(billing);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public IActionResult BillingDetail(int commandId)
+        {
+            var billing = _context.Billings.Where(x => x.CommandId == commandId).FirstOrDefault();
+            if(billing == null)
+                return NotFound();
+
+            return View("BillingDetail", billing);
+        }
+
+        public IActionResult Confirmation()
+        {
+            return View();
         }
     }
 }

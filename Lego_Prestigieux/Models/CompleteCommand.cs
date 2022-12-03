@@ -21,5 +21,7 @@ namespace Lego_Prestigieux.Models
         public float Taxes { get; set; }
         public float Total { get; set; }
         public float ShippingCost { get; set; }
+
+        public CommandStatus CommandStatus { get; set; }
     }
 }

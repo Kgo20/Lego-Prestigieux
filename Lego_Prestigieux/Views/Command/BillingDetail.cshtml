@@ -1,0 +1,76 @@
+﻿@model Lego_Prestigieux.Models.BillingModel
+
+@{
+    ViewData["Title"] = "BillingDetail";
+}
+
+<div class="container-fluid">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Détail du reçu</span></h2>
+    <div class="contact-form bg-light p-30">
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CreationDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.LastNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.LastNumber)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.City)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.City)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Province)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Province)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Country)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Country)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PostalCode)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PostalCode)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CommandId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CommandId)
+            </dd>
+        </dl>
+        <a asp-controller="Command" asp-action="List" class="btn btn-primary">Retour</a>
+    </div>
+</div>
+

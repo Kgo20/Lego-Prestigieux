@@ -11,7 +11,7 @@
     <div class="row px-xl-5">
         <div class="col-lg-8 table-responsive mb-5">
             <h1>Détail de la commande</h1>
-             <table class="table table-light table-borderless table-hover text-center mb-0">
+            <table class="table table-light table-borderless table-hover text-center mb-0">
                 <thead class="thead-dark">
                     <tr>
                         <th>
@@ -166,20 +166,23 @@
                         <h5>Total</h5>
                         <h5>@Model.Total.ToString("0.00")$</h5>
                     </div>
-                    
-                     @*<a asp-action="ChangeStatus" asp-controller="Command" asp-route-commandid="@Model.CommandId" class="btn btn-block btn-primary font-weight-bold my-3 py-3">
+
+                    @*<a asp-action="ChangeStatus" asp-controller="Command" asp-route-commandid="@Model.CommandId" class="btn btn-block btn-primary font-weight-bold my-3 py-3">
                         Confirmer la commande
                         </a>*@
 
-                    <form method="post">
-                        <div class="row">
-                            <div class="col">
-                                <div class="float-right">
-                                    <button id="payment-request-button" class="btn btn-primary" type="button" href="#payment-form">Payer</button>
+                    @if (@Model.CommandStatus == CommandStatus.Confirmed)
+                    {
+                        <form method="post">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="float-right">
+                                        <button id="payment-request-button" class="btn btn-primary" type="button" href="#payment-form">Payer</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    }
                 </div>
             </div>
         </div>
@@ -213,19 +216,52 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text bg-white"><i class="fas fa-phone"></i></span>
                         </div>
-                        <input id="phone" name="phone" class="form-control border-left-0" type="text" placeholder="Phone number" required>
+                        <input id="phone" name="phone" class="form-control border-left-0" type="text" placeholder="Phone number" required pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$">
                     </div>
                 </div>
             </div>
 
             <div class="form-row mb-2">
                 <div class="col">
-                    <label for="email" class="control-label">Email</label>
+                    <label for="address" class="control-label">Address</label>
                     <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white"><i class="fas fa-at"></i></span>
-                        </div>
-                        <input id="email" class="form-control border-left-0" type="email" placeholder="Email address" required>
+                        <input id="address" name="address" class="form-control border-left-0" type="text" placeholder="Address" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col">
+                    <label for="city" class="control-label">City</label>
+                    <div class="input-group">
+                        <input id="city" name="city" class="form-control border-left-0" type="text" placeholder="City" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col">
+                    <label for="province" class="control-label">Province</label>
+                    <div class="input-group">
+                        <input id="province" name="province" class="form-control border-left-0" type="text" placeholder="Province" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col">
+                    <label for="country" class="control-label">Country</label>
+                    <div class="input-group">
+                        <input id="country" name="country" class="form-control border-left-0" type="text" placeholder="Country" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row mb-2">
+                <div class="col">
+                    <label for="postalcode" class="control-label">Postal Code</label>
+                    <div class="input-group">
+                        <input id="postalcode" name="postalcode" class="form-control border-left-0" type="text" placeholder="Postal Code" required pattern="^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$">
                     </div>
                 </div>
             </div>
@@ -256,84 +292,118 @@
 </section>
 
 @section scripts {
-    <script src="https://js.stripe.com/v3/"></script>
+<script src="https://js.stripe.com/v3/"></script>
 
-    <script>
-        (function () {
-            "use strict";
+<script>
+    (function () {
+        "use strict";
 
-            $(document).ready(function () {
-                $("#payment-request-button").on("click", function () {
-                    $("#payment-section").modal({
-                        backdrop: 'static'
-                    });
-
-                    $("#cancel-btn").on("click", function () {
-                        $("#payment-section").modal("hide");
-                    });
+        $(document).ready(function () {
+            $("#payment-request-button").on("click", function () {
+                $("#payment-section").modal({
+                    backdrop: 'static'
                 });
 
-                let stripe = Stripe("@StripeOptions.Value.PublicKey");
-                let elements = stripe.elements();
-
-                let card = elements.create("card", {
-                    style: {
-                        base: {
-                            fontSize: "16px",
-                            fontWeight: "400",
-                            color: "#495057",
-                        }
-                    },
-                    hideIcon: true,
-                    hidePostalCode: true
+                $("#cancel-btn").on("click", function () {
+                    $("#payment-section").modal("hide");
                 });
+            });
 
-                card.mount("#card");
+            let stripe = Stripe("@StripeOptions.Value.PublicKey");
+            let elements = stripe.elements();
 
-                card.addEventListener('change', function (event) {
-                    var displayError = document.getElementById('card-errors');
-                    if (event.error) {
-                        displayError.textContent = event.error.message;
-                    } else {
-                        displayError.textContent = '';
+            let card = elements.create("card", {
+                style: {
+                    base: {
+                        fontSize: "16px",
+                        fontWeight: "400",
+                        color: "#495057",
                     }
-                });
+                },
+                hideIcon: true,
+                hidePostalCode: true
+            });
 
-                // Create a token or display an error when the form is submitted.
-                var form = $("#payment-form");
-                form.on('submit', function (e) {
-                    e.preventDefault();
+            card.mount("#card");
 
-                    stripe.createToken(card).then(function (result) {
-                        if (result.error) {
-                            $("#card-errors").textContent = result.error.message;
-                        } else {
-                            // Send the token to your server.
-                            stripeTokenHandler(result.token);
-                        }
-                    });
-                });
-
-                function stripeTokenHandler(token) {
-                    fetch('/payment/charges', {
-                        method: 'post',
-                        headers: { 'content-type': 'application/json' },
-                        body: JSON.stringify({
-                            token: token.id,
-                            description: "@Model.CommandId",
-                            amountInCents: @Model.Total * 100, // Price in cents
-                            currencyCode: "cad"
-                        })
-                        // Report to the browser that the payment was successful or failed.
-                    }).then(function (response) {
-                        if (response.ok) {
-                            window.location.replace("@Url.Action("Confirmation")")
-                        } else {
-                            e.complete('fail');
-                        }
-                    });
+            card.addEventListener('change', function (event) {
+                var displayError = document.getElementById('card-errors');
+                if (event.error) {
+                    displayError.textContent = event.error.message;
+                } else {
+                    displayError.textContent = '';
                 }
             });
-        })();
-    </script>
+
+            let name = "";
+            let phone = "";
+            let address = "";
+            let city = "";
+            let province = "";
+            let country = "";
+            let postalcode = "";
+
+            // Create a token or display an error when the form is submitted.
+            var form = $("#payment-form");
+            form.on('submit', function (e) {
+                e.preventDefault();
+                const form = document.getElementById('payment-form');
+                const formData = new FormData(form);
+
+               name = formData.get('name');
+               phone = formData.get('phone');
+               address = formData.get('address');
+               city = formData.get('city');
+               province = formData.get('province');
+               country = formData.get('country');
+               postalcode = formData.get('postalcode');
+
+                stripe.createToken(card).then(function (result) {
+                    if (result.error) {
+                        $("#card-errors").textContent = result.error.message;
+                    } else {
+                        // Send the token to your server.
+                        stripeTokenHandler(result.token);
+                    }
+                });
+            });
+
+            function stripeTokenHandler(token) {
+                fetch('/Command/Charges', {
+                    method: 'post',
+                    headers: { 'content-type': 'application/json' },
+                    body: JSON.stringify({
+                        Token: token.id,
+                        Description: "@Model.CommandId",
+                        AmountInCents: @((long)Model.Total * 100), // Price in cents
+                        CurrencyCode: "cad"
+                    })
+                    // Report to the browser that the payment was successful or failed.
+                }).then(function (response) {
+                    if (response.ok) {
+                      $.ajax({
+                            url: 'CreateBilling/',
+                            data: {
+                                Name: name,
+                                PhoneNumber: phone,
+                                Address: address,
+                                City: city,
+                                Province: province,
+                                Country: country,
+                                PostalCode: postalcode,
+                                LastNumber: token.card.last4,
+                                CommandId: @Model.CommandId },
+                            success: function () {
+                                window.location.replace("@Url.Action("Confirmation")");
+                            }})
+                    } else {
+                        e.complete('fail');
+                    }
+                });
+            }
+        });
+    })();
+</script>
 }
+
+

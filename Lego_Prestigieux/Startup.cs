@@ -20,24 +20,24 @@ namespace Lego_Prestigieux
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IConfiguration config;
 
-        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration config)
+        {
+            this.config = config;
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<StripeOptions>(options =>
-                Configuration.GetSection("StripeTest").Bind(options)
+                config.GetSection("StripeTest").Bind(options)
             );
             services.AddControllersWithViews();
             services.AddFluentValidation(x => { x.RegisterValidatorsFromAssemblyContaining<Startup>(); });
             //services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
             services.AddIdentityCore<ApplicationUser>()
              .AddRoles<IdentityRole>()
@@ -62,7 +62,7 @@ namespace Lego_Prestigieux
         {
             if (env.IsDevelopment())
             {
-                StripeConfiguration.SetApiKey(Configuration.GetConnectionString("Stripe:TestSecretKey"));
+                StripeConfiguration.SetApiKey(config.GetConnectionString("Stripe:TestSecretKey"));
 
                 app.UseDeveloperExceptionPage();
             }

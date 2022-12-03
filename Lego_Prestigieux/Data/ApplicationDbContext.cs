@@ -10,6 +10,8 @@ namespace Lego_Prestigieux.Data
         public DbSet<AddressModel> Addresses { get; set; }
         public DbSet<CommandModel> Commands { get; set; }
         public DbSet<CartItemModel> CartItems { get; set; }
+        public DbSet<BillingModel> Billings { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -19,5 +21,6 @@ namespace Lego_Prestigieux.Data
             modelBuilder.Seed();
 
         }
+
     }
 }

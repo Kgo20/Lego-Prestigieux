@@ -537,7 +537,7 @@ namespace Lego_Prestigieux.Data
             {
                 Id = 1,
                 AddressId = 1,
-                Status = CommandStatus.InPreparation,
+                Status = CommandStatus.Confirmed,
                 UserId = "1",
                 CommandCreationDate = DateTime.Now,
                 ExpectedDeliveryDate = DateTime.Now.AddDays(14),
@@ -564,7 +564,7 @@ namespace Lego_Prestigieux.Data
             {
                 Id = 4,
                 AddressId = 1,
-                Status = CommandStatus.InPreparation,
+                Status = CommandStatus.Confirmed,
                 UserId = "1",
                 CommandCreationDate = DateTime.Now,
                 ExpectedDeliveryDate = DateTime.Now.AddDays(14),

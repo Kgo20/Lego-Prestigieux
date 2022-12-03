@@ -1,17 +1,18 @@
 ﻿@model Lego_Prestigieux.Models.CommandInfo
 
 <tr>
-    <td class="align-middle"><a asp-action="CompleteCommand" 
-                        asp-controller="Command" 
-                        asp-route-commandId="@Model.CommandId">@Model.CommandId.ToString("000000")</a>
-                    </td>
+    <td class="align-middle">
+        <a asp-action="CompleteCommand"
+           asp-controller="Command"
+           asp-route-commandId="@Model.CommandId">@Model.CommandId.ToString("000000")</a>
+    </td>
     <td class="align-middle">@Model.CommandCreationDate.ToString("g")</td>
     <td class="align-middle">@Model.ExpectedDeliveryDate.ToString("g")</td>
     <td class="align-middle">@Model.CommandTotal.ToString("0.00")$</td>
     <td class="align-middle">@Model.ProductAmount.ToString()</td>
     <td class="align-middle">@Model.Status</td>
-        @if (Model.Status == CommandStatus.Confirmed)
-        {
+    @if (Model.Status == CommandStatus.Confirmed)
+    {
         <td class="align-middle">
             <form method="post" asp-action="Remove"
               asp-controller="Command"
@@ -27,9 +28,23 @@
                 });
             </script>
         </td>
-        }
-        else {
+    }
+    else
+    {
         <td class="align-middle">
         </td>
-        }
+    }
+    @if (Model.Status == CommandStatus.InDelivery)
+    {
+        <td class="align-middle">
+            <a asp-action="BillingDetail" asp-controller="Command" asp-route-commandId="@Model.CommandId">Reçu</a>
+        </td>
+    }
+    else
+    {
+        <td class="align-middle">
+        </td>
+    }
+
+    
 </tr>
